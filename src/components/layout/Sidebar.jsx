@@ -29,7 +29,7 @@ const menus = [
 
 export default function Sidebar({ activePage, setActivePage }) {
   return (
-    <aside className="w-64 min-h-[calc(100vh-80px)] bg-[#071323] border-r border-slate-800 px-4 py-5 flex flex-col justify-between">
+    <aside className="w-64 shrink-0 min-h-[calc(100vh-80px)] bg-[#071323] border-r border-slate-800 px-4 py-5 flex flex-col justify-between">
       <nav className="space-y-2">
         {menus.map((item) => {
           const Icon = item.icon;

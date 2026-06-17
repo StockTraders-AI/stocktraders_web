@@ -52,7 +52,7 @@ export default function Dashboard({ activePage, setActivePage }) {
 
         <div className="flex flex-1 flex-col">
           <main className="flex-1 p-4">
-            <div className="grid grid-cols-12 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-12 xl:grid-cols-12 gap-4">
               <MarketStatusCard />
               <MoneyFlowCard />
               <InvestorProfileCard />

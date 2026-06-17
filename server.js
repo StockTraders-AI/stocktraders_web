@@ -14,7 +14,10 @@ const app = express();
 app.disable("x-powered-by");
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: [
+      "http://localhost:5173",
+      "http://45.251.114.164:5173",
+    ],
   })
 );
 app.use(express.json());
@@ -315,6 +318,6 @@ app.get("/api/test-index", async (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`API proxy running at http://localhost:${PORT}`);
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`API proxy running at http://0.0.0.0:${PORT}`);
 });

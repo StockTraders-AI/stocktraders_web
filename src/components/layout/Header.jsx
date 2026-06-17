@@ -30,7 +30,7 @@ export default function Header() {
 
     async function loadIndexes() {
       try {
-        const res = await fetch("http://localhost:4005/api/indexes");
+        const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/indexes`);
 
         const json = await res.json();
 

@@ -16,7 +16,7 @@ function App() {
       setSmdtBranchLoading(true);
       setSmdtBranchError("");
 
-      const res = await fetch("http://localhost:4005/api/smdt-branch", {
+      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/smdt-branch`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -58,9 +58,7 @@ function App() {
         activePage={activePage}
         setActivePage={setActivePage}
         smdtBranchData={smdtBranchData}
-        smdtBranchLoading={smdtBranchLoading}
         smdtBranchError={smdtBranchError}
-        reloadSMDTBranch={loadSMDTBranch}
       />
     );
   }
