@@ -9,7 +9,6 @@ import RankingCard from "../components/cards/RankingCard";
 import AIAdvisorCard from "../components/cards/AIAdvisorCard";
 import AIRecommendationCard from "../components/cards/AIRecommendationCard";
 import PortfolioCard from "../components/cards/PortfolioCard";
-import CashFlowMapCard from "../components/cards/CashFlowMapCard";
 
 const sectorCashflow = [
   { name: "Chứng khoán", status: "TIẾP TỤC ĐỔ VÀO", score: 82 },
@@ -43,13 +42,13 @@ const tickerStrength = [
   { code: "GAS", name: "", score: 76 },
 ];
 
-export default function Dashboard() {
+export default function Dashboard({ activePage, setActivePage }) {
   return (
     <div className="min-h-screen bg-[#020817] text-white">
       <Header />
 
       <div className="flex min-h-[calc(100vh-80px)]">
-        <Sidebar />
+        <Sidebar activePage={activePage} setActivePage={setActivePage} />
 
         <div className="flex flex-1 flex-col">
           <main className="flex-1 p-4">
@@ -91,7 +90,7 @@ export default function Dashboard() {
               <AIAdvisorCard />
               <AIRecommendationCard />
               <PortfolioCard />
-              <CashFlowMapCard />
+              {/*<CashFlowMapCard />*/}
             </div>
           </main>
 

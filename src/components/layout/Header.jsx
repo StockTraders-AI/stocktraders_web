@@ -1,29 +1,59 @@
+import { useEffect, useState } from "react";
 import logo from "../../assets/logo.svg";
-import { FiBell, FiChevronDown } from "react-icons/fi";
 import avatar from "../../assets/ava.png";
-
-const indexes = [
-  {
-    name: "VNINDEX",
-    value: "1,238.45",
-    change: "+12.45 (+1.02%)",
-  },
-  {
-    name: "HNXINDEX",
-    value: "234.12",
-    change: "+2.13 (+0.92%)",
-  },
-  {
-    name: "UPINDEX",
-    value: "98.45",
-    change: "+0.65 (+0.67%)",
-  },
-];
+import { FiBell, FiChevronDown } from "react-icons/fi";
 
 export default function Header() {
+  const [indexes, setIndexes] = useState([
+    {
+      name: "VNINDEX",
+      value: "--",
+      change: "--",
+      isUp: true,
+    },
+    {
+      name: "HNXINDEX",
+      value: "--",
+      change: "--",
+      isUp: true,
+    },
+    {
+      name: "UPINDEX",
+      value: "--",
+      change: "--",
+      isUp: true,
+    },
+  ]);
+
+  useEffect(() => {
+    let mounted = true;
+
+    async function loadIndexes() {
+      try {
+        const res = await fetch("http://localhost:4005/api/indexes");
+
+        const json = await res.json();
+
+        if (mounted && json.status === "success") {
+          setIndexes(json.data);
+        }
+      } catch (error) {
+        console.error("Load index error:", error);
+      }
+    }
+
+    loadIndexes();
+
+    const timer = setInterval(loadIndexes, 15000);
+
+    return () => {
+      mounted = false;
+      clearInterval(timer);
+    };
+  }, []);
+
   return (
     <header className="h-20 bg-[#020817] border-b border-slate-800 flex items-center">
-
       {/* Logo */}
       <div className="w-75 h-full px-4 flex items-center border-r border-slate-800">
         <img
@@ -39,17 +69,17 @@ export default function Header() {
           Dashboard
         </h1>
 
-        <p className="text-sm text-slate-400 mt-2">
+        <p className="text-sm text-slate-400 mt-1">
           Tổng quan thị trường
         </p>
       </div>
 
-      {/* Chỉ số thị trường */}
+      {/* Index */}
       <div className="flex-1 px-4">
         <div className="flex gap-3">
-          {indexes.map((item) => (
+          {indexes.map((item, index) => (
             <div
-              key={item.name}
+              key={`${item.name}-${index}`}
               className="flex-1 h-14 rounded-xl bg-[#071323] border border-slate-800 px-4 flex flex-col justify-center"
             >
               <div className="text-[11px] text-slate-400">
@@ -57,11 +87,23 @@ export default function Header() {
               </div>
 
               <div className="flex items-center gap-3 mt-1">
-                <span className="text-[18px] font-bold text-emerald-400">
+                <span
+                  className={`text-[18px] font-bold ${
+                    item.isUp
+                      ? "text-emerald-400"
+                      : "text-red-400"
+                  }`}
+                >
                   {item.value}
                 </span>
 
-                <span className="text-[12px] font-medium text-emerald-400">
+                <span
+                  className={`text-[12px] font-medium ${
+                    item.isUp
+                      ? "text-emerald-400"
+                      : "text-red-400"
+                  }`}
+                >
                   {item.change}
                 </span>
               </div>
@@ -71,8 +113,7 @@ export default function Header() {
       </div>
 
       {/* User */}
-      <div className="w-67.5 h-full border-l border-slate-800 px-5 flex items-center justify-between">
-
+      <div className="w-[270px] h-full border-l border-slate-800 px-5 flex items-center justify-between">
         {/* Notification */}
         <div className="relative">
           <FiBell className="text-xl text-white cursor-pointer" />
@@ -82,10 +123,9 @@ export default function Header() {
           </div>
         </div>
 
-        {/* User info */}
+        {/* User Info */}
         <div className="flex items-center gap-3">
-
-          <div className="w-10 h-10 rounded-full overflow-hidden bg-slate-700">
+          <div className="w-10 h-10 rounded-full overflow-hidden">
             <img
               src={avatar}
               alt="avatar"
@@ -107,7 +147,6 @@ export default function Header() {
 
           <FiChevronDown className="text-slate-400 cursor-pointer" />
         </div>
-
       </div>
     </header>
   );

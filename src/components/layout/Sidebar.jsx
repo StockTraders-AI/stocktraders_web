@@ -10,22 +10,24 @@ import {
   Users,
   Settings,
   Crown,
+  Activity,
 } from "lucide-react";
 
 const menus = [
-  { label: "Dashboard", icon: LayoutDashboard, active: true },
-  { label: "Thị trường", icon: LineChart },
-  { label: "Ngành", icon: BriefcaseBusiness },
-  { label: "Cổ phiếu", icon: Building2 },
-  { label: "Danh mục", icon: Wallet },
-  { label: "AI Advisor", icon: Bot },
-  { label: "Báo cáo", icon: FileBarChart },
-  { label: "Kiến thức", icon: BookOpen },
-  { label: "Cộng đồng", icon: Users },
-  { label: "Cài đặt", icon: Settings },
+  { key: "dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { key: "market", label: "Thị trường", icon: LineChart },
+  { key: "sector", label: "Ngành", icon: BriefcaseBusiness },
+  { key: "ticker", label: "Cổ phiếu", icon: Building2 },
+  { key: "portfolio", label: "Danh mục", icon: Wallet },
+  { key: "ai-advisor", label: "AI Advisor", icon: Bot },
+  { key: "report", label: "Báo cáo", icon: FileBarChart },
+  { key: "knowledge", label: "Kiến thức", icon: BookOpen },
+  { key: "community", label: "Cộng đồng", icon: Users },
+  { key: "setting", label: "Cài đặt", icon: Settings },
+  { key: "smdt-branch", label: "SMDT Ngành", icon: Activity },
 ];
 
-export default function Sidebar() {
+export default function Sidebar({ activePage, setActivePage }) {
   return (
     <aside className="w-64 min-h-[calc(100vh-80px)] bg-[#071323] border-r border-slate-800 px-4 py-5 flex flex-col justify-between">
       <nav className="space-y-2">
@@ -34,10 +36,11 @@ export default function Sidebar() {
 
           return (
             <button
-              key={item.label}
+              key={item.key}
+              onClick={() => setActivePage(item.key)}
               className={[
                 "w-full h-12 rounded-lg px-4 flex items-center gap-3 text-sm transition",
-                item.active
+                activePage === item.key
                   ? "bg-purple-700 text-white shadow-[0_0_20px_rgba(109,40,217,0.35)]"
                   : "text-slate-300 hover:bg-slate-800/70 hover:text-white",
               ].join(" ")}
@@ -54,9 +57,7 @@ export default function Sidebar() {
           <Crown size={28} />
         </div>
 
-        <div className="text-lg font-bold text-purple-400">
-          Premium
-        </div>
+        <div className="text-lg font-bold text-purple-400">Premium</div>
 
         <p className="mt-2 text-sm leading-6 text-slate-300">
           Nâng cấp trải nghiệm nhà đầu tư thông minh
