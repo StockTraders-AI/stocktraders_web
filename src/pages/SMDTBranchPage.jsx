@@ -181,7 +181,7 @@ export default function SMDTBranchPage({
               </div>
 
               <div className="mb-5 md:mb-6 flex flex-wrap items-center gap-3 md:gap-4">
-                <div className="flex w-full md:w-auto overflow-hidden rounded-2xl border border-slate-200">
+                <div className="flex w-full md:w-auto overflow-hidden rounded-2xl border border-slate-200 bg-white">
                   <button
                     onClick={() => {
                       setActiveTab("core");
@@ -190,8 +190,8 @@ export default function SMDTBranchPage({
                     className={[
                       "flex-1 md:flex-none px-4 md:px-7 py-3 text-sm font-bold",
                       activeTab === "core"
-                        ? "bg-purple-700 text-white"
-                        : "bg-white text-slate-900",
+                        ? "bg-purple-700 text-white rounded-2xl"
+                        : "bg-white text-slate-900"
                     ].join(" ")}
                   >
                     Chủ lực{" "}
@@ -208,8 +208,8 @@ export default function SMDTBranchPage({
                     className={[
                       "flex-1 md:flex-none px-4 md:px-7 py-3 text-sm font-bold",
                       activeTab === "sub"
-                        ? "bg-purple-700 text-white"
-                        : "bg-white text-slate-900",
+                        ? "bg-purple-700 text-white rounded-2xl"
+                        : "bg-white text-slate-900"
                     ].join(" ")}
                   >
                     Ngành phụ{" "}
