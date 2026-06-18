@@ -79,11 +79,13 @@ export default function SMDTTickerPage({
   setActivePage,
   smdtTickerData,
   smdtTickerError,
+  branchPaths = [],
 }) {
   const rawData = useMemo(() => smdtTickerData || [], [smdtTickerData]);
   const defaultDateRange = useMemo(() => getDefaultDateRange(), []);
 
   const [search, setSearch] = useState("");
+  const [selectedBranch, setSelectedBranch] = useState("");
   const [fromDate, setFromDate] = useState(defaultDateRange.fromDate);
   const [toDate, setToDate] = useState(defaultDateRange.toDate);
   const [page, setPage] = useState(1);
@@ -94,9 +96,19 @@ export default function SMDTTickerPage({
 
   const tickers = useMemo(() => {
     const keyword = search.trim().toLowerCase();
+    const selectedBranchData = branchPaths.find(
+      (branch) => branch.name === selectedBranch
+    );
+    const selectedTickerSet = selectedBranchData
+      ? new Set(selectedBranchData.tickers || [])
+      : null;
 
     return rawData
       .filter((item) => {
+        if (selectedTickerSet && !selectedTickerSet.has(item.keyValue)) {
+          return false;
+        }
+
         if (!keyword) return true;
 
         return [item.keyValue, item.keyName]
@@ -109,7 +121,7 @@ export default function SMDTTickerPage({
 
         return aCode.localeCompare(bCode);
       });
-  }, [rawData, search]);
+  }, [rawData, search, branchPaths, selectedBranch]);
 
   const allDates = useMemo(() => {
     const dateSet = new Set();
@@ -256,6 +268,25 @@ export default function SMDTTickerPage({
                   </button>
                 </div>
 
+                <div className="flex w-full md:w-auto items-center gap-2 rounded-2xl border border-slate-200 px-4 py-3 text-sm max-[1536px]:rounded-xl max-[1536px]:px-3 max-[1536px]:py-2.5 max-[1536px]:text-xs">
+                  <span className="shrink-0">Ngành</span>
+                  <select
+                    value={selectedBranch}
+                    onChange={(e) => {
+                      setSelectedBranch(e.target.value);
+                      resetPage();
+                    }}
+                    className="min-w-0 max-w-56 bg-white outline-none max-[1536px]:max-w-44"
+                  >
+                    <option value="">Tất cả</option>
+                    {branchPaths.map((branch) => (
+                      <option key={branch.path || branch.name} value={branch.name}>
+                        {branch.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
                 <div className="flex w-full md:ml-auto md:w-auto md:min-w-65 items-center gap-2 rounded-2xl border border-slate-200 px-4 py-3 max-[1536px]:min-w-56 max-[1536px]:rounded-xl max-[1536px]:px-3 max-[1536px]:py-2.5 max-[1280px]:md:min-w-48">
                   <Search size={18} />
                   <input
@@ -306,7 +337,7 @@ export default function SMDTTickerPage({
                             title={ticker.keyName}
                             className="smdt-branch-cell border-b border-r border-slate-200 px-4 md:px-6 lg:px-8 py-4 lg:py-5 text-[11px] md:text-xs lg:text-sm font-[700] leading-tight uppercase max-[1536px]:px-1.5 max-[1536px]:py-2 max-[1536px]:text-[8px] max-[1280px]:text-[8px]"
                           >
-                            {key}
+                            {key} (%)
                           </th>
                         );
                       })}

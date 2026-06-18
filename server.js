@@ -26,12 +26,15 @@ const PORT = 4005;
 
 const CACHE_FILE = path.resolve("cache/smdt-branch.json");
 const TICKER_CACHE_FILE = path.resolve("cache/smdt-ticker.json");
+const BRANCH_PATH_CACHE_FILE = path.resolve("cache/branch-path.json");
 const SMDT_CACHE_MS = 3 * 60 * 1000;
 
 let smdtBranchCache = null;
 let smdtBranchCacheTime = 0;
 let smdtTickerCache = null;
 let smdtTickerCacheTime = 0;
+let branchPathCache = null;
+let branchPathCacheTime = 0;
 
 try {
   if (fs.existsSync(CACHE_FILE)) {
@@ -57,6 +60,19 @@ try {
   }
 } catch (error) {
   console.error("Load SMDT Ticker cache error:", error.message);
+}
+
+try {
+  if (fs.existsSync(BRANCH_PATH_CACHE_FILE)) {
+    const cache = JSON.parse(fs.readFileSync(BRANCH_PATH_CACHE_FILE, "utf8"));
+
+    branchPathCache = cache.data;
+    branchPathCacheTime = new Date(cache.updatedAt).getTime();
+
+    console.log("Loaded Branch Path cache:", cache.updatedAt);
+  }
+} catch (error) {
+  console.error("Load Branch Path cache error:", error.message);
 }
 
 const SYMBOLS = [
@@ -403,6 +419,79 @@ app.post("/api/smdt-ticker", async (req, res) => {
     return res.status(500).json({
       status: "error",
       message: "Cannot load SMDT Ticker data",
+      detail: error.response?.data || error.message,
+    });
+  }
+});
+
+app.get("/api/branch-path", async (req, res) => {
+  const now = Date.now();
+
+  try {
+    if (branchPathCache) {
+      const age = now - branchPathCacheTime;
+
+      if (age < SMDT_CACHE_MS) {
+        return res.json({
+          status: "success",
+          data: branchPathCache,
+          cache: true,
+          cacheAgeSeconds: Math.floor(age / 1000),
+        });
+      }
+    }
+
+    const response = await axios.get(
+      "https://stocktradersai.vn/service/data/getBranchPath",
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        timeout: 40000,
+      }
+    );
+
+    branchPathCache = response.data || [];
+    branchPathCacheTime = now;
+
+    fs.mkdirSync(path.dirname(BRANCH_PATH_CACHE_FILE), { recursive: true });
+
+    fs.writeFileSync(
+      BRANCH_PATH_CACHE_FILE,
+      JSON.stringify(
+        {
+          updatedAt: new Date(now).toISOString(),
+          data: branchPathCache,
+        },
+        null,
+        2
+      )
+    );
+
+    return res.json({
+      status: "success",
+      data: branchPathCache,
+      cache: false,
+      cacheAgeSeconds: 0,
+    });
+  } catch (error) {
+    console.error(
+      "Branch Path API error:",
+      error.response?.data || error.message
+    );
+
+    if (branchPathCache) {
+      return res.json({
+        status: "success",
+        data: branchPathCache,
+        cache: true,
+        stale: true,
+      });
+    }
+
+    return res.status(500).json({
+      status: "error",
+      message: "Cannot load branch path data",
       detail: error.response?.data || error.message,
     });
   }

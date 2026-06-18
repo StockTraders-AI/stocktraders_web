@@ -362,7 +362,7 @@ export default function SMDTBranchPage({
                           key={branch.keyName}
                           className="smdt-branch-cell border-b border-r border-slate-200 px-4 md:px-6 lg:px-8 py-4 lg:py-5 text-[11px] md:text-xs lg:text-sm font-[700] leading-tight uppercase max-[1536px]:px-1.5 max-[1536px]:py-2 max-[1536px]:text-[8px] max-[1280px]:text-[8px]"
                         >
-                          {branch.keyName}
+                          {branch.keyName} (%)
                         </th>
                       ))}
                     </tr>
