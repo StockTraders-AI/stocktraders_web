@@ -138,17 +138,19 @@ export default function SMDTBranchPage({
       });
     });
 
-    return Array.from(dateSet).sort((a, b) =>
-      dateSort === "desc" ? b.localeCompare(a) : a.localeCompare(b)
-    );
-  }, [branches, fromDate, toDate, dateSort]);
+    return Array.from(dateSet).sort((a, b) => b.localeCompare(a));
+  }, [branches, fromDate, toDate]);
 
   const totalPages = Math.max(1, Math.ceil(allDates.length / pageSize));
 
   const pageDates = useMemo(() => {
     const start = (page - 1) * pageSize;
-    return allDates.slice(start, start + pageSize);
-  }, [allDates, page, pageSize]);
+    return allDates
+      .slice(start, start + pageSize)
+      .sort((a, b) =>
+        dateSort === "desc" ? b.localeCompare(a) : a.localeCompare(b)
+      );
+  }, [allDates, page, pageSize, dateSort]);
 
   const valueMap = useMemo(() => {
     const map = {};
@@ -360,9 +362,9 @@ export default function SMDTBranchPage({
                       {branches.map((branch) => (
                         <th
                           key={branch.keyName}
-                          className="smdt-branch-cell border-b border-r border-slate-200 px-4 md:px-6 lg:px-8 py-4 lg:py-5 text-[11px] md:text-xs lg:text-sm font-[700] leading-tight uppercase max-[1536px]:px-1.5 max-[1536px]:py-2 max-[1536px]:text-[8px] max-[1280px]:text-[8px]"
+                          className="smdt-branch-cell border-b border-r border-slate-200 px-3 md:px-4 lg:px-5 py-3 lg:py-4 text-[10px] md:text-[11px] lg:text-xs font-[700] leading-snug normal-case max-[1536px]:px-1 max-[1536px]:py-1.5 max-[1536px]:text-[8px] max-[1280px]:text-[7px]"
                         >
-                          {branch.keyName} (%)
+                          {branch.keyName}
                         </th>
                       ))}
                     </tr>

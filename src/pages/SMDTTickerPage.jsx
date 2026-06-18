@@ -134,17 +134,19 @@ export default function SMDTTickerPage({
       });
     });
 
-    return Array.from(dateSet).sort((a, b) =>
-      dateSort === "desc" ? b.localeCompare(a) : a.localeCompare(b)
-    );
-  }, [tickers, fromDate, toDate, dateSort]);
+    return Array.from(dateSet).sort((a, b) => b.localeCompare(a));
+  }, [tickers, fromDate, toDate]);
 
   const totalPages = Math.max(1, Math.ceil(allDates.length / pageSize));
 
   const pageDates = useMemo(() => {
     const start = (page - 1) * pageSize;
-    return allDates.slice(start, start + pageSize);
-  }, [allDates, page, pageSize]);
+    return allDates
+      .slice(start, start + pageSize)
+      .sort((a, b) =>
+        dateSort === "desc" ? b.localeCompare(a) : a.localeCompare(b)
+      );
+  }, [allDates, page, pageSize, dateSort]);
 
   const valueMap = useMemo(() => {
     const map = {};
