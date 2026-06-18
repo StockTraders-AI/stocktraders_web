@@ -8,7 +8,7 @@ function App() {
   const [activePage, setActivePage] = useState("dashboard");
 
   const [smdtBranchData, setSmdtBranchData] = useState([]);
-  const [smdtBranchLoading, setSmdtBranchLoading] = useState(false);
+  const [, setSmdtBranchLoading] = useState(false);
   const [smdtBranchError, setSmdtBranchError] = useState("");
 
   async function loadSMDTBranch() {

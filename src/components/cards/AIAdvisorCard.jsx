@@ -1,9 +1,9 @@
 export default function AIAdvisorCard() {
   return (
-    <section className="col-span-3 rounded-xl border border-slate-800 bg-[#071323] p-4">
+    <section className="dashboard-card-3 rounded-xl border border-slate-800 bg-[#071323] p-4 max-[1536px]:p-3">
       <h2 className="text-lg font-bold text-white">🤖 AI ADVISOR</h2>
 
-      <div className="mt-4 rounded-lg border border-slate-800 bg-[#081829] p-4 space-y-3 text-sm">
+      <div className="mt-4 rounded-lg border border-slate-800 bg-[#081829] p-4 space-y-3 text-sm max-[1536px]:p-3 max-[1536px]:text-xs">
         {[
           ["Thị trường:", "CHỜ MUA"],
           ["Dòng tiền:", "TIẾP TỤC ĐỔ VÀO"],

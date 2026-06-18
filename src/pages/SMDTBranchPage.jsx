@@ -36,20 +36,21 @@ function getValueClass(value) {
   if (value === null || value === undefined) {
     return "";
   }
-  
+
   const number = Number(value);
 
-  // >= 70 xanh
-  if (number >= 70) {
-    return "bg-green-100 text-green-800";
+  if (number >= 100) {
+    return "bg-green-200 text-green-800";
   }
 
-  // 60-69 vàng
-  if (number >= 60) {
+  if (number >= 70) {
+    return "bg-green-100 text-green-700";
+  }
+
+  if (number >= 20) {
     return "bg-yellow-100 text-yellow-800";
   }
 
-  // < 60 đỏ
   return "bg-red-100 text-red-700";
 }
 
@@ -154,6 +155,8 @@ export default function SMDTBranchPage({
     return map;
   }, [branches]);
 
+  const isCompactTable = branches.length <= CORE_BRANCHES.length;
+
   function resetPage() {
     setPage(1);
   }
@@ -162,33 +165,33 @@ export default function SMDTBranchPage({
     <div className="min-h-screen bg-[#020817] text-white">
       <Header />
 
-      <div className="flex min-h-[calc(100vh-80px)] bg-[#020817] overflow-hidden">
+      <div className="app-shell flex bg-[#020817] overflow-hidden max-[900px]:flex-col">
         <Sidebar activePage={activePage} setActivePage={setActivePage} />
 
         <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
-          <main className="flex-1 overflow-hidden bg-[#020817] p-3 md:p-4 lg:p-6 text-slate-950">
-            <div className="w-full max-w-full overflow-hidden rounded-2xl lg:rounded-3xl border border-slate-200 bg-white p-3 md:p-4 lg:p-6 shadow-sm">
-              <div className="mb-5 md:mb-6 flex items-center justify-between gap-3 md:gap-4">
+          <main className="flex-1 overflow-hidden bg-[#020817] px-3 pb-3 pt-0 md:px-4 md:pb-4 md:pt-0 lg:px-6 lg:pb-6 lg:pt-0 text-slate-950 max-[1536px]:px-4 max-[1536px]:pb-4 max-[1536px]:pt-0 max-[1280px]:px-3 max-[1280px]:pb-3 max-[1280px]:pt-0">
+            <div className="w-full max-w-full overflow-hidden rounded-2xl lg:rounded-3xl border border-slate-200 bg-white p-3 md:p-4 lg:p-6 shadow-sm max-[1536px]:rounded-2xl max-[1536px]:p-4 max-[1280px]:p-3">
+              <div className="mb-5 md:mb-6 flex items-center justify-between gap-3 md:gap-4 max-[1536px]:mb-4">
                 <div className="flex items-center gap-3">
-                  <h1 className="text-[22px] md:text-[28px] lg:text-[32px] font-[700] leading-none tracking-wide">
+                  <h1 className="text-[20px] md:text-[24px] lg:text-[26px] font-[700] leading-none tracking-wide max-[1536px]:text-[22px] max-[1280px]:text-[20px]">
                     BẢNG SMDT NGÀNH
                   </h1>
 
-                  <span className="flex h-6 w-6 items-center justify-center rounded-full border border-purple-500 text-sm font-bold text-purple-600">
+                  <span className="flex h-5 w-5 items-center justify-center rounded-full border border-purple-500 text-xs font-bold text-purple-600">
                     i
                   </span>
                 </div>
               </div>
 
-              <div className="mb-5 md:mb-6 flex flex-wrap items-center gap-3 md:gap-4">
-                <div className="flex w-full md:w-auto overflow-hidden rounded-2xl border border-slate-200 bg-white">
+              <div className="mb-5 md:mb-6 flex flex-wrap items-center gap-3 md:gap-4 max-[1536px]:mb-4 max-[1536px]:gap-2">
+                <div className="flex w-full md:w-auto overflow-hidden rounded-2xl border border-slate-200 bg-white max-[1536px]:rounded-xl">
                   <button
                     onClick={() => {
                       setActiveTab("core");
                       resetPage();
                     }}
                     className={[
-                      "flex-1 md:flex-none px-4 md:px-7 py-3 text-sm font-bold",
+                      "flex-1 md:flex-none px-4 md:px-7 py-3 text-sm font-bold max-[1536px]:px-5 max-[1536px]:py-2.5 max-[1536px]:text-xs",
                       activeTab === "core"
                         ? "bg-purple-700 text-white rounded-2xl"
                         : "bg-white text-slate-900"
@@ -206,7 +209,7 @@ export default function SMDTBranchPage({
                       resetPage();
                     }}
                     className={[
-                      "flex-1 md:flex-none px-4 md:px-7 py-3 text-sm font-bold",
+                      "flex-1 md:flex-none px-4 md:px-7 py-3 text-sm font-bold max-[1536px]:px-5 max-[1536px]:py-2.5 max-[1536px]:text-xs",
                       activeTab === "sub"
                         ? "bg-purple-700 text-white rounded-2xl"
                         : "bg-white text-slate-900"
@@ -219,7 +222,7 @@ export default function SMDTBranchPage({
                   </button>
                 </div>
 
-                <div className="flex w-full md:w-auto items-center gap-2 md:gap-3 rounded-2xl border border-slate-200 px-3 md:px-4 py-3">
+                <div className="flex w-full md:w-auto items-center gap-2 md:gap-3 rounded-2xl border border-slate-200 px-3 md:px-4 py-3 max-[1536px]:rounded-xl max-[1536px]:px-3 max-[1536px]:py-2.5 max-[1536px]:text-sm">
                   <CalendarDays size={18} />
                   <input
                     type="date"
@@ -228,7 +231,7 @@ export default function SMDTBranchPage({
                       setFromDate(e.target.value);
                       resetPage();
                     }}
-                    className="min-w-0 flex-1 md:flex-none outline-none text-sm md:text-base"
+                    className="min-w-0 flex-1 md:flex-none outline-none text-sm md:text-base max-[1536px]:text-sm"
                   />
                   <span>→</span>
                   <input
@@ -238,11 +241,11 @@ export default function SMDTBranchPage({
                       setToDate(e.target.value);
                       resetPage();
                     }}
-                    className="outline-none"
+                    className="min-w-0 outline-none max-[1536px]:text-sm"
                   />
                 </div>
 
-                <div className="flex w-full md:w-auto items-center gap-2 rounded-2xl border border-slate-200 px-3 md:px-4 py-3 text-sm">
+                <div className="flex w-full md:w-auto items-center gap-2 rounded-2xl border border-slate-200 px-3 md:px-4 py-3 text-sm max-[1536px]:rounded-xl max-[1536px]:px-3 max-[1536px]:py-2.5 max-[1536px]:text-xs">
                   <span>Hiển thị</span>
 
                   <input
@@ -256,17 +259,17 @@ export default function SMDTBranchPage({
                       setPageSize(value > 0 ? value : 25);
                       setPage(1);
                     }}
-                    className="w-20 rounded-lg border border-slate-200 px-2 py-1 text-center outline-none"
+                    className="w-20 rounded-lg border border-slate-200 px-2 py-1 text-center outline-none max-[1536px]:w-16"
                   />
 
                   <span>phiên</span>
                 </div>
 
-                <div className="flex w-full md:w-auto overflow-hidden rounded-2xl border border-slate-200">
+                <div className="flex w-full md:w-auto overflow-hidden rounded-2xl border border-slate-200 max-[1536px]:rounded-xl">
                   <button
                     onClick={() => setViewMode("grid")}
                     className={[
-                      "flex-1 md:flex-none px-4 py-3",
+                      "flex-1 md:flex-none px-4 py-3 max-[1536px]:px-3 max-[1536px]:py-2.5",
                       viewMode === "grid" ? "bg-purple-100 text-purple-700" : "",
                     ].join(" ")}
                   >
@@ -276,7 +279,7 @@ export default function SMDTBranchPage({
                   <button
                     onClick={() => setViewMode("list")}
                     className={[
-                      "flex-1 md:flex-none px-4 py-3",
+                      "flex-1 md:flex-none px-4 py-3 max-[1536px]:px-3 max-[1536px]:py-2.5",
                       viewMode === "list" ? "bg-purple-100 text-purple-700" : "",
                     ].join(" ")}
                   >
@@ -284,7 +287,7 @@ export default function SMDTBranchPage({
                   </button>
                 </div>
 
-                <div className="flex w-full md:ml-auto md:w-auto md:min-w-65 items-center gap-2 rounded-2xl border border-slate-200 px-4 py-3">
+                <div className="flex w-full md:ml-auto md:w-auto md:min-w-65 items-center gap-2 rounded-2xl border border-slate-200 px-4 py-3 max-[1536px]:min-w-56 max-[1536px]:rounded-xl max-[1536px]:px-3 max-[1536px]:py-2.5 max-[1280px]:md:min-w-48">
                   <Search size={18} />
                   <input
                     value={search}
@@ -304,18 +307,23 @@ export default function SMDTBranchPage({
                 </div>
               )}
 
-              <div className="w-full max-w-full overflow-x-auto overflow-y-hidden rounded-2xl border border-slate-200">
-                <table className="min-w-full border-collapse text-center">
+              <div className="w-full max-w-full overflow-x-auto overflow-y-hidden rounded-2xl border border-slate-200 max-[1536px]:rounded-xl">
+                <table
+                  className={[
+                    "smdt-table border-collapse text-center",
+                    isCompactTable ? "smdt-table-fit" : "smdt-table-scroll",
+                  ].join(" ")}
+                >
                   <thead>
                     <tr className="bg-white">
-                      <th className="sticky left-0 z-10 border-b border-r border-slate-200 bg-white px-4 md:px-6 lg:px-8 py-4 lg:py-5 text-sm md:text-base font-black">
+                      <th className="smdt-date-cell sticky left-0 z-10 border-b border-r border-slate-200 bg-white px-4 md:px-6 lg:px-8 py-4 lg:py-5 text-xs md:text-sm font-black max-[1536px]:px-1.5 max-[1536px]:py-2 max-[1536px]:text-[10px] max-[1280px]:text-[9px]">
                         DATE ↓
                       </th>
 
                       {branches.map((branch) => (
                         <th
                           key={branch.keyName}
-                          className="min-w-[130px] md:min-w-[160px] lg:min-w-45 border-b border-r border-slate-200 px-4 md:px-6 lg:px-8 py-4 lg:py-5 text-sm md:text-[15px] lg:text-[17px] font-[700] leading-none uppercase"
+                          className="smdt-branch-cell border-b border-r border-slate-200 px-4 md:px-6 lg:px-8 py-4 lg:py-5 text-xs md:text-sm lg:text-[15px] font-[700] leading-tight uppercase max-[1536px]:px-1.5 max-[1536px]:py-2 max-[1536px]:text-[9px] max-[1280px]:text-[8px]"
                         >
                           {branch.keyName}
                         </th>
@@ -326,7 +334,7 @@ export default function SMDTBranchPage({
                   <tbody>
                     {pageDates.map((date) => (
                       <tr key={date}>
-                        <td className="sticky left-0 z-10 border-r border-slate-100 bg-white px-4 md:px-6 lg:px-8 py-4 lg:py-5 text-sm md:text-[15px] lg:text-[17px] font-[700] leading-none">
+                        <td className="smdt-date-cell sticky left-0 z-10 border-r border-slate-100 bg-white px-4 md:px-6 lg:px-8 py-4 lg:py-5 text-xs md:text-sm lg:text-[15px] font-[700] leading-none max-[1536px]:px-1.5 max-[1536px]:py-2 max-[1536px]:text-[10px] max-[1280px]:text-[9px]">
                           {formatDate(date)}
                         </td>
 
@@ -336,11 +344,11 @@ export default function SMDTBranchPage({
                           return (
                             <td
                               key={`${branch.keyName}-${date}`}
-                              className="border-r border-slate-100 px-4 md:px-6 lg:px-8 py-3 lg:py-4"
+                              className="smdt-branch-cell border-r border-slate-100 px-4 md:px-6 lg:px-8 py-3 lg:py-4 max-[1536px]:px-1.5 max-[1536px]:py-1.5"
                             >
                               <span
                                 className={[
-                                  "inline-flex min-w-[76px] md:min-w-[86px] lg:min-w-[92px] justify-center rounded-xl px-3 lg:px-4 py-2 lg:py-3 text-sm md:text-[15px] lg:text-[17px] font-[700] leading-none",
+                                  "inline-flex min-w-[68px] md:min-w-[76px] lg:min-w-[84px] justify-center rounded-xl px-3 lg:px-4 py-2 lg:py-3 text-xs md:text-sm lg:text-[15px] font-[700] leading-none max-[1536px]:min-w-[44px] max-[1536px]:rounded-md max-[1536px]:px-1.5 max-[1536px]:py-1.5 max-[1536px]:text-[10px] max-[1280px]:min-w-[40px] max-[1280px]:text-[9px]",
                                   getValueClass(value),
                                 ].join(" ")}
                               >
@@ -359,21 +367,24 @@ export default function SMDTBranchPage({
 
               <div className="mt-5 md:mt-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div className="flex flex-wrap items-center gap-3 md:gap-5 text-xs md:text-sm text-slate-600">
-                    <span className="font-medium">CHÚ THÍCH:</span>
-                    <span className="flex items-center gap-2">
-                        <i className="h-4 w-4 rounded bg-green-100"></i>
-                        <span>≥ 70</span>
-                    </span>
-                    <span className="flex items-center gap-2">
-                        <i className="h-4 w-4 rounded bg-yellow-100"></i>
-                        <span>60 - 69</span>
-                    </span>
-                    <span className="flex items-center gap-2">
-                        <i className="h-4 w-4 rounded bg-red-100"></i>
-                        <span>&lt; 60</span>
-                    </span>
+                  <span className="font-medium">CHÚ THÍCH:</span>
+                  <span className="flex items-center gap-2">
+                    <i className="h-4 w-4 rounded bg-green-200"></i>
+                    <span>≥ 100</span>
+                  </span>
+                  <span className="flex items-center gap-2">
+                    <i className="h-4 w-4 rounded bg-green-100"></i>
+                    <span>70 - 99</span>
+                  </span>
+                  <span className="flex items-center gap-2">
+                    <i className="h-4 w-4 rounded bg-yellow-100"></i>
+                    <span>20 - 69</span>
+                  </span>
+                  <span className="flex items-center gap-2">
+                    <i className="h-4 w-4 rounded bg-red-100"></i>
+                    <span>&lt; 20</span>
+                  </span>
                 </div>
-
                 <div className="flex items-center gap-2">
                   <button
                     disabled={page <= 1}

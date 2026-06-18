@@ -47,12 +47,12 @@ export default function Dashboard({ activePage, setActivePage }) {
     <div className="min-h-screen bg-[#020817] text-white">
       <Header />
 
-      <div className="flex min-h-[calc(100vh-80px)]">
+      <div className="app-shell flex max-[900px]:flex-col">
         <Sidebar activePage={activePage} setActivePage={setActivePage} />
 
-        <div className="flex flex-1 flex-col">
-          <main className="flex-1 p-4">
-            <div className="grid grid-cols-1 md:grid-cols-12 xl:grid-cols-12 gap-4">
+        <div className="flex min-w-0 flex-1 flex-col">
+          <main className="flex-1 p-4 max-[1536px]:p-3">
+            <div className="dashboard-grid">
               <MarketStatusCard />
               <MoneyFlowCard />
               <InvestorProfileCard />

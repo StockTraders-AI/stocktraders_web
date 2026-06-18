@@ -53,42 +53,42 @@ export default function Header() {
   }, []);
 
   return (
-    <header className="h-20 bg-[#020817] border-b border-slate-800 flex items-center">
+    <header className="app-header bg-[#020817] border-b border-slate-800 flex items-center max-[900px]:h-auto max-[900px]:flex-wrap">
       {/* Logo */}
-      <div className="w-75 h-full px-4 flex items-center border-r border-slate-800">
+      <div className="w-75 h-full px-4 flex items-center border-r border-slate-800 max-[1536px]:w-60 max-[1536px]:px-3 max-[1280px]:w-52 max-[900px]:h-16 max-[900px]:w-1/2 max-[900px]:border-b">
         <img
           src={logo}
           alt="StockTraders AI"
-          className="h-12 w-auto"
+          className="h-12 w-auto max-[1536px]:h-10 max-[1280px]:h-9"
         />
       </div>
 
       {/* Dashboard */}
-      <div className="w-55 h-full px-5 flex flex-col justify-center border-r border-slate-800">
-        <h1 className="text-[20px] font-bold text-white leading-none">
+      <div className="w-55 h-full px-5 flex flex-col justify-center border-r border-slate-800 max-[1536px]:w-46 max-[1536px]:px-4 max-[1280px]:w-40 max-[900px]:order-3 max-[900px]:h-14 max-[900px]:w-full max-[900px]:border-b">
+        <h1 className="text-[20px] font-bold text-white leading-none max-[1536px]:text-[17px] max-[1280px]:text-[16px]">
           Dashboard
         </h1>
 
-        <p className="text-sm text-slate-400 mt-1">
+        <p className="text-sm text-slate-400 mt-1 max-[1536px]:text-xs max-[1280px]:hidden">
           Tổng quan thị trường
         </p>
       </div>
 
       {/* Index */}
-      <div className="flex-1 px-4">
-        <div className="flex gap-3">
+      <div className="flex-1 min-w-0 px-4 max-[1536px]:px-3 max-[900px]:order-4 max-[900px]:w-full max-[900px]:flex-none max-[900px]:py-2">
+        <div className="flex gap-3 max-[1536px]:gap-2 max-[700px]:overflow-x-auto">
           {indexes.map((item, index) => (
             <div
               key={`${item.name}-${index}`}
-              className="flex-1 h-14 rounded-xl bg-[#071323] border border-slate-800 px-4 flex flex-col justify-center"
+              className="flex-1 min-w-0 h-14 rounded-xl bg-[#071323] border border-slate-800 px-4 flex flex-col justify-center max-[1536px]:h-12 max-[1536px]:px-3 max-[700px]:min-w-42"
             >
-              <div className="text-[11px] text-slate-400">
+              <div className="text-[11px] text-slate-400 max-[1536px]:text-[10px]">
                 {item.name}
               </div>
 
-              <div className="flex items-center gap-3 mt-1">
+              <div className="flex min-w-0 items-center gap-3 mt-1 max-[1536px]:gap-2">
                 <span
-                  className={`text-[18px] font-bold ${
+                  className={`text-[18px] font-bold max-[1536px]:text-[16px] max-[1280px]:text-[15px] ${
                     item.isUp
                       ? "text-emerald-400"
                       : "text-red-400"
@@ -98,7 +98,7 @@ export default function Header() {
                 </span>
 
                 <span
-                  className={`text-[12px] font-medium ${
+                  className={`text-[12px] font-medium max-[1536px]:text-[11px] max-[1280px]:text-[10px] ${
                     item.isUp
                       ? "text-emerald-400"
                       : "text-red-400"
@@ -113,7 +113,7 @@ export default function Header() {
       </div>
 
       {/* User */}
-      <div className="w-[270px] h-full border-l border-slate-800 px-5 flex items-center justify-between">
+      <div className="w-[270px] h-full border-l border-slate-800 px-5 flex items-center justify-between max-[1536px]:w-[220px] max-[1536px]:px-4 max-[1280px]:w-[168px] max-[1280px]:gap-3 max-[900px]:h-16 max-[900px]:w-1/2 max-[900px]:border-b max-[900px]:justify-end">
         {/* Notification */}
         <div className="relative">
           <FiBell className="text-xl text-white cursor-pointer" />
@@ -124,8 +124,8 @@ export default function Header() {
         </div>
 
         {/* User Info */}
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full overflow-hidden">
+        <div className="flex items-center gap-3 max-[1536px]:gap-2">
+          <div className="w-10 h-10 rounded-full overflow-hidden max-[1536px]:h-9 max-[1536px]:w-9">
             <img
               src={avatar}
               alt="avatar"
@@ -133,8 +133,8 @@ export default function Header() {
             />
           </div>
 
-          <div>
-            <div className="text-sm font-medium text-white whitespace-nowrap">
+          <div className="max-[1280px]:hidden">
+            <div className="text-sm font-medium text-white whitespace-nowrap max-[1536px]:text-xs">
               Nguyễn Văn A
             </div>
 

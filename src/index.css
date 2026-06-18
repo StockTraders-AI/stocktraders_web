@@ -14,3 +14,142 @@ body {
 #root {
   min-height: 100vh;
 }
+
+:root {
+  --app-header-height: 80px;
+  --app-sidebar-width: 256px;
+}
+
+.app-header {
+  height: var(--app-header-height);
+}
+
+.app-shell {
+  min-height: calc(100vh - var(--app-header-height));
+}
+
+.app-sidebar {
+  width: var(--app-sidebar-width);
+  min-height: calc(100vh - var(--app-header-height));
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.dashboard-card-3 {
+  grid-column: span 3 / span 3;
+}
+
+.dashboard-card-4 {
+  grid-column: span 4 / span 4;
+}
+
+.dashboard-card-5 {
+  grid-column: span 5 / span 5;
+}
+
+.smdt-table {
+  table-layout: fixed;
+}
+
+.smdt-table-fit {
+  width: 100%;
+  min-width: 0;
+}
+
+.smdt-table-scroll {
+  min-width: max-content;
+}
+
+.smdt-date-cell {
+  width: 140px;
+  min-width: 140px;
+}
+
+.smdt-branch-cell {
+  width: 140px;
+  min-width: 140px;
+}
+
+.smdt-table-fit .smdt-date-cell {
+  width: 14%;
+  min-width: 0;
+}
+
+.smdt-table-fit .smdt-branch-cell {
+  width: auto;
+  min-width: 0;
+}
+
+@media (max-width: 1536px) {
+  :root {
+    --app-header-height: 68px;
+    --app-sidebar-width: 204px;
+  }
+
+  .dashboard-grid {
+    gap: 0.75rem;
+  }
+
+  .dashboard-card-3,
+  .dashboard-card-4,
+  .dashboard-card-5 {
+    grid-column: span 6 / span 6;
+  }
+
+  .smdt-date-cell {
+    width: 112px;
+    min-width: 112px;
+  }
+
+  .smdt-branch-cell {
+    width: 108px;
+    min-width: 108px;
+  }
+
+  .smdt-table-fit .smdt-date-cell,
+  .smdt-table-fit .smdt-branch-cell {
+    min-width: 0;
+  }
+}
+
+@media (max-width: 1280px) {
+  :root {
+    --app-sidebar-width: 184px;
+  }
+
+  .dashboard-card-3,
+  .dashboard-card-4,
+  .dashboard-card-5 {
+    grid-column: span 12 / span 12;
+  }
+
+  .smdt-date-cell {
+    width: 102px;
+    min-width: 102px;
+  }
+
+  .smdt-branch-cell {
+    width: 96px;
+    min-width: 96px;
+  }
+}
+
+@media (max-width: 900px) {
+  :root {
+    --app-header-height: auto;
+    --app-sidebar-width: 100%;
+  }
+
+  .app-shell {
+    min-height: auto;
+  }
+
+  .app-sidebar {
+    min-height: auto;
+    width: 100%;
+  }
+}
