@@ -1,0 +1,512 @@
+[
+  {
+    "name": "Bất động sản dân cư",
+    "path": "9-245-249-255-265-",
+    "tickers": [
+      "AGG",
+      "CEO",
+      "DIG",
+      "DXG",
+      "HDC",
+      "HDG",
+      "HQC",
+      "HTN",
+      "ITC",
+      "KDH",
+      "KHG",
+      "LDG",
+      "NDN",
+      "NLG",
+      "NTL",
+      "NVL",
+      "PDR",
+      "QCG",
+      "SCR",
+      "TDH",
+      "TIG",
+      "VPI"
+    ],
+    "val": 265
+  },
+  {
+    "name": "Bảo hiểm nhân thọ",
+    "path": "9-244-248-254-263-",
+    "tickers": [
+      "BVH"
+    ],
+    "val": 263
+  },
+  {
+    "name": "Bất động sản công nghiệp",
+    "path": "9-245-249-255-264-",
+    "tickers": [
+      "BCM",
+      "D2D",
+      "IDC",
+      "IJC",
+      "KBC",
+      "LHG",
+      "NTC",
+      "PHR",
+      "SZC"
+    ],
+    "val": 264
+  },
+  {
+    "name": "Cao su",
+    "path": "8-215-217-221-223-",
+    "tickers": [
+      "DPR",
+      "GVR"
+    ],
+    "val": 223
+  },
+  {
+    "name": "Chuyển phát nhanh",
+    "path": "2-27-33-58-63-",
+    "tickers": [
+      "VTP"
+    ],
+    "val": 63
+  },
+  {
+    "name": "Chăn nuôi gia súc, gia cầm",
+    "path": "6-149-180-192-194-",
+    "tickers": [
+      "HAG"
+    ],
+    "val": 194
+  },
+  {
+    "name": "Dịch vụ cảng biển, cảng sông",
+    "path": "2-27-33-61-69-",
+    "tickers": [
+      "HAH"
+    ],
+    "val": 69
+  },
+  {
+    "name": "Dịch vụ Hàng không",
+    "path": "4-95-114-116-121-",
+    "tickers": [
+      "HVN",
+      "VJC"
+    ],
+    "val": 121
+  },
+  {
+    "name": "Dịch vụ kho bãi",
+    "path": "2-27-33-61-70-",
+    "tickers": [
+      "GMD",
+      "VSC"
+    ],
+    "val": 70
+  },
+  {
+    "name": "Dịch vụ Máy tính",
+    "path": "1-12-13-15-18-",
+    "tickers": [
+      "CMG"
+    ],
+    "val": 18
+  },
+  {
+    "name": "Giải trí & Truyền thông",
+    "path": "4-96-127-129-132-",
+    "tickers": [
+      "YEG"
+    ],
+    "val": 132
+  },
+  {
+    "name": "Hàng cá nhân",
+    "path": "6-147-150-155-157-",
+    "tickers": [
+      "GIL",
+      "PNJ",
+      "TLG"
+    ],
+    "val": 157
+  },
+  {
+    "name": "Hàng May mặc",
+    "path": "6-147-150-156-159-",
+    "tickers": [
+      "MSH",
+      "TCM",
+      "TNG"
+    ],
+    "val": 159
+  },
+  {
+    "name": "Hóa chất hàng hóa khác",
+    "path": "8-215-217-222-226-",
+    "tickers": [
+      "CSV",
+      "DGC",
+      "PLC"
+    ],
+    "val": 226
+  },
+  {
+    "name": "Khai khoáng",
+    "path": "8-216-218-230-231-",
+    "tickers": [
+      "KSB",
+      "MSR"
+    ],
+    "val": 231
+  },
+  {
+    "name": "Máy công nghiệp",
+    "path": "2-27-29-34-36-",
+    "tickers": [
+      "REE",
+      "VEA"
+    ],
+    "val": 36
+  },
+  {
+    "name": "Môi giới chứng khoán",
+    "path": "9-246-250-257-271-",
+    "tickers": [
+      "AGR",
+      "APG",
+      "APS",
+      "BSI",
+      "BVS",
+      "CTS",
+      "FTS",
+      "HCM",
+      "MBS",
+      "ORS",
+      "SBS",
+      "SHS",
+      "SSI",
+      "VCI",
+      "VDS",
+      "VIX",
+      "VND"
+    ],
+    "val": 271
+  },
+  {
+    "name": "Ngân hàng thương mại truyền thống",
+    "path": "7-211-212-213-214-",
+    "tickers": [
+      "ABB",
+      "ACB",
+      "BID",
+      "BVB",
+      "CTG",
+      "EIB",
+      "HDB",
+      "KLB",
+      "LPB",
+      "MBB",
+      "MSB",
+      "NAB",
+      "NVB",
+      "OCB",
+      "PGB",
+      "SGB",
+      "SHB",
+      "SSB",
+      "STB",
+      "TCB",
+      "TPB",
+      "VCB",
+      "VIB",
+      "VPB"
+    ],
+    "val": 214
+  },
+  {
+    "name": "Nhựa",
+    "path": "8-215-217-221-225-",
+    "tickers": [
+      "AAA"
+    ],
+    "val": 225
+  },
+  {
+    "name": "Nuôi trồng thủy hải sản",
+    "path": "6-149-180-192-196-",
+    "tickers": [
+      "ANV",
+      "ASM",
+      "CMX",
+      "FMC",
+      "IDI",
+      "MPC",
+      "VHC"
+    ],
+    "val": 196
+  },
+  {
+    "name": "Phân bón",
+    "path": "8-215-217-222-228-",
+    "tickers": [
+      "BFC",
+      "DCM",
+      "DDV",
+      "DPM",
+      "LAS"
+    ],
+    "val": 228
+  },
+  {
+    "name": "Phân phối hàng chuyên dụng",
+    "path": "4-94-97-102-110-",
+    "tickers": [
+      "DGW",
+      "MWG",
+      "PET"
+    ],
+    "val": 110
+  },
+  {
+    "name": "Phân phối xăng dầu & khí đốt",
+    "path": "10-275-276-279-282-",
+    "tickers": [
+      "CNG",
+      "GAS"
+    ],
+    "val": 282
+  },
+  {
+    "name": "Phần mềm",
+    "path": "1-12-13-17-20-",
+    "tickers": [
+      "FPT"
+    ],
+    "val": 20
+  },
+  {
+    "name": "Quản lý tài sản",
+    "path": "9-246-250-258-272-",
+    "tickers": [
+      "EVF"
+    ],
+    "val": 272
+  },
+  {
+    "name": "Sóng ngành Vin",
+    "path": "296-0-0-0-297-",
+    "tickers": [
+      "VHM",
+      "VIC",
+      "VRE"
+    ],
+    "val": 297
+  },
+  {
+    "name": "Sản phẩm từ sữa",
+    "path": "6-149-180-193-204-",
+    "tickers": [
+      "VNM"
+    ],
+    "val": 204
+  },
+  {
+    "name": "Sản xuất & Phân phối Điện",
+    "path": "10-275-277-284-285-",
+    "tickers": [
+      "GEG",
+      "NT2",
+      "POW",
+      "PPC",
+      "QTP"
+    ],
+    "val": 285
+  },
+  {
+    "name": "Sản xuất ô tô",
+    "path": "6-148-172-175-178-",
+    "tickers": [
+      "HHS",
+      "TCH"
+    ],
+    "val": 178
+  },
+  {
+    "name": "Sản xuất gạch ốp lát & Vật liệu lát",
+    "path": "2-28-75-76-80-",
+    "tickers": [
+      "VCS",
+      "VGC"
+    ],
+    "val": 80
+  },
+  {
+    "name": "Sản xuất và Khai thác dầu khí",
+    "path": "3-87-88-90-91-",
+    "tickers": [
+      "BSR",
+      "OIL",
+      "PLX"
+    ],
+    "val": 91
+  },
+  {
+    "name": "Sản xuất, chế biến thép",
+    "path": "8-216-219-235-238-",
+    "tickers": [
+      "HPG",
+      "HSG",
+      "NKG",
+      "VGS"
+    ],
+    "val": 238
+  },
+  {
+    "name": "Tài chính đặc biệt",
+    "path": "9-246-250-259-273-",
+    "tickers": [
+      "FIT"
+    ],
+    "val": 273
+  },
+  {
+    "name": "Thức ăn gia súc",
+    "path": "6-149-180-192-197-",
+    "tickers": [
+      "DBC"
+    ],
+    "val": 197
+  },
+  {
+    "name": "Thực phẩm chế biến",
+    "path": "6-149-180-193-207-",
+    "tickers": [
+      "MSN"
+    ],
+    "val": 207
+  },
+  {
+    "name": "Thiết bị và Dịch vụ Dầu khí",
+    "path": "3-87-89-92-93-",
+    "tickers": [
+      "PVC",
+      "PVD",
+      "PVS"
+    ],
+    "val": 93
+  },
+  {
+    "name": "Thiết bị điện",
+    "path": "2-27-30-39-41-",
+    "tickers": [
+      "GEX"
+    ],
+    "val": 41
+  },
+  {
+    "name": "Thương mại (Bán buôn) sắt thép",
+    "path": "8-216-219-235-239-",
+    "tickers": [
+      "SMC",
+      "TLH"
+    ],
+    "val": 239
+  },
+  {
+    "name": "Vận tải nội địa",
+    "path": "2-27-33-62-73-",
+    "tickers": [
+      "VIP",
+      "VOS"
+    ],
+    "val": 73
+  },
+  {
+    "name": "Vận tải quốc tế",
+    "path": "2-27-33-62-74-",
+    "tickers": [
+      "PVT"
+    ],
+    "val": 74
+  },
+  {
+    "name": "Vật liệu xây dựng khác",
+    "path": "2-28-75-76-83-",
+    "tickers": [
+      "BMP"
+    ],
+    "val": 83
+  },
+  {
+    "name": "Viễn thông cố định",
+    "path": "11-286-287-289-290-",
+    "tickers": [
+      "FOX"
+    ],
+    "val": 290
+  },
+  {
+    "name": "Viễn thông di động",
+    "path": "11-286-288-291-292-",
+    "tickers": [
+      "VGI"
+    ],
+    "val": 292
+  },
+  {
+    "name": "Văn phòng cho thuê",
+    "path": "9-245-249-255-267-",
+    "tickers": [
+      "IDJ"
+    ],
+    "val": 267
+  },
+  {
+    "name": "Xây dựng",
+    "path": "2-28-75-85-86-",
+    "tickers": [
+      "C4G",
+      "CII",
+      "CTD",
+      "CTI",
+      "CTR",
+      "DPG",
+      "DTD",
+      "FCN",
+      "HHV",
+      "HUT",
+      "L14",
+      "LCG",
+      "MST",
+      "PC1",
+      "VCG"
+    ],
+    "val": 86
+  },
+  {
+    "name": "Xi măng",
+    "path": "2-28-75-76-84-",
+    "tickers": [
+      "BCC",
+      "HT1"
+    ],
+    "val": 84
+  },
+  {
+    "name": "Đại siêu thị",
+    "path": "4-94-97-102-111-",
+    "tickers": [
+      "FRT"
+    ],
+    "val": 111
+  },
+  {
+    "name": "Đường",
+    "path": "6-149-180-193-201-",
+    "tickers": [
+      "LSS",
+      "QNS",
+      "SBT"
+    ],
+    "val": 201
+  }
+]

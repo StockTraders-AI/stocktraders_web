@@ -1,6 +1,7 @@
 import Sidebar from "../components/layout/Sidebar";
 import Header from "../components/layout/Header";
 import Footer from "../components/layout/Footer";
+import branchPaths from "../data/branchPaths.json";
 import { useMemo, useState } from "react";
 import {
   Search,
@@ -79,7 +80,6 @@ export default function SMDTTickerPage({
   setActivePage,
   smdtTickerData,
   smdtTickerError,
-  branchPaths = [],
 }) {
   const rawData = useMemo(() => smdtTickerData || [], [smdtTickerData]);
   const defaultDateRange = useMemo(() => getDefaultDateRange(), []);
@@ -121,7 +121,7 @@ export default function SMDTTickerPage({
 
         return aCode.localeCompare(bCode);
       });
-  }, [rawData, search, branchPaths, selectedBranch]);
+  }, [rawData, search, selectedBranch]);
 
   const allDates = useMemo(() => {
     const dateSet = new Set();
@@ -268,7 +268,7 @@ export default function SMDTTickerPage({
                   </button>
                 </div>
 
-                <div className="flex w-full md:w-auto items-center gap-2 rounded-2xl border border-slate-200 px-4 py-3 text-sm max-[1536px]:rounded-xl max-[1536px]:px-3 max-[1536px]:py-2.5 max-[1536px]:text-xs">
+                <div className="flex w-full md:w-auto md:min-w-72 items-center gap-2 rounded-2xl border border-slate-200 px-4 py-3 text-sm max-[1536px]:min-w-60 max-[1536px]:rounded-xl max-[1536px]:px-3 max-[1536px]:py-2.5 max-[1536px]:text-xs">
                   <span className="shrink-0">Ngành</span>
                   <select
                     value={selectedBranch}
@@ -276,9 +276,16 @@ export default function SMDTTickerPage({
                       setSelectedBranch(e.target.value);
                       resetPage();
                     }}
-                    className="min-w-0 max-w-56 bg-white outline-none max-[1536px]:max-w-44"
+                    className="min-w-0 flex-1 appearance-none rounded-lg bg-white px-2 py-1 text-slate-900 outline-none"
                   >
-                    <option value="">Tất cả</option>
+                    <option value="">
+                      {branchPaths.length ? "Tất cả ngành" : "Đang tải ngành..."}
+                    </option>
+                    {!branchPaths.length && (
+                      <option value="" disabled>
+                        Chưa có dữ liệu ngành
+                      </option>
+                    )}
                     {branchPaths.map((branch) => (
                       <option key={branch.path || branch.name} value={branch.name}>
                         {branch.name}

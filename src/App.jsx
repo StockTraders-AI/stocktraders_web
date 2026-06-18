@@ -14,8 +14,6 @@ function App() {
   const [smdtTickerData, setSmdtTickerData] = useState([]);
   const [, setSmdtTickerLoading] = useState(false);
   const [smdtTickerError, setSmdtTickerError] = useState("");
-  const [branchPaths, setBranchPaths] = useState([]);
-  const [branchPathError, setBranchPathError] = useState("");
 
   async function loadSMDTBranch() {
     try {
@@ -69,34 +67,15 @@ function App() {
     }
   }
 
-  async function loadBranchPath() {
-    try {
-      setBranchPathError("");
-
-      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/branch-path`);
-      const json = await res.json();
-
-      if (!res.ok) {
-        throw new Error(json.message || "Cannot load branch path data");
-      }
-
-      setBranchPaths(Array.isArray(json.data) ? json.data : []);
-    } catch (error) {
-      setBranchPathError(error.message || "Cannot load branch path data");
-    }
-  }
-
   useEffect(() => {
     const firstLoadTimer = setTimeout(() => {
       loadSMDTBranch();
       loadSMDTTicker();
-      loadBranchPath();
     }, 0);
 
     const intervalTimer = setInterval(() => {
       loadSMDTBranch();
       loadSMDTTicker();
-      loadBranchPath();
     }, SMDT_REFRESH_MS);
 
     return () => {
@@ -122,8 +101,7 @@ function App() {
         activePage={activePage}
         setActivePage={setActivePage}
         smdtTickerData={smdtTickerData}
-        smdtTickerError={smdtTickerError || branchPathError}
-        branchPaths={branchPaths}
+        smdtTickerError={smdtTickerError}
       />
     );
   }
