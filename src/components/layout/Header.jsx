@@ -63,17 +63,6 @@ export default function Header() {
         />
       </div>
 
-      {/* Dashboard */}
-      <div className="w-55 h-full px-5 flex flex-col justify-center border-r border-slate-800 max-[1536px]:w-46 max-[1536px]:px-4 max-[1280px]:w-40 max-[900px]:order-3 max-[900px]:h-14 max-[900px]:w-full max-[900px]:border-b">
-        <h1 className="text-[20px] font-bold text-white leading-none max-[1536px]:text-[17px] max-[1280px]:text-[16px]">
-          Dashboard
-        </h1>
-
-        <p className="text-sm text-slate-400 mt-1 max-[1536px]:text-xs max-[1280px]:hidden">
-          Tổng quan thị trường
-        </p>
-      </div>
-
       {/* Index */}
       <div className="flex-1 min-w-0 px-4 max-[1536px]:px-3 max-[900px]:order-4 max-[900px]:w-full max-[900px]:flex-none max-[900px]:py-2">
         <div className="flex gap-3 max-[1536px]:gap-2 max-[700px]:overflow-x-auto">
