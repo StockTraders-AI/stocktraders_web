@@ -49,8 +49,6 @@ const SYMBOLS = [
   { name: "UPINDEX", symbol: "HNXUPCOMINDEX" },
 ];
 
-const today = "16/06/2026";
-
 const lastGoodData = new Map();
 
 function sleep(ms) {
@@ -87,12 +85,29 @@ function formatChange(value) {
   return `${sign}${value.toFixed(2)}`;
 }
 
-function buildIndexUrl(symbol) {
+function getVietnamDate(date = new Date()) {
+  const parts = new Intl.DateTimeFormat("en-GB", {
+    timeZone: "Asia/Ho_Chi_Minh",
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  }).formatToParts(date);
+
+  const values = Object.fromEntries(
+    parts
+      .filter((part) => part.type !== "literal")
+      .map((part) => [part.type, part.value])
+  );
+
+  return `${values.day}/${values.month}/${values.year}`;
+}
+
+function buildIndexUrl(symbol, tradingDate) {
   return (
     "https://fc-data.ssi.com.vn/api/v2/Market/IntradayOhlc" +
     `?symbol=${symbol}` +
-    `&fromDate=${today}` +
-    `&toDate=${today}` +
+    `&fromDate=${tradingDate}` +
+    `&toDate=${tradingDate}` +
     "&pageIndex=1" +
     "&pageSize=2" +
     "&ascending=false" +
@@ -100,8 +115,8 @@ function buildIndexUrl(symbol) {
   );
 }
 
-async function requestIndexRows(symbol, token) {
-  const url = buildIndexUrl(symbol);
+async function requestIndexRows(symbol, token, tradingDate) {
+  const url = buildIndexUrl(symbol, tradingDate);
 
   const res = await axios.get(url, {
     headers: {
@@ -142,12 +157,16 @@ function buildIndexResult(item, rows) {
   };
 }
 
-async function fetchIndex(item, token) {
+async function fetchIndex(item, token, tradingDate) {
   let lastUrl = "";
 
   for (let attempt = 1; attempt <= 2; attempt++) {
     try {
-      const { url, rows } = await requestIndexRows(item.symbol, token);
+      const { url, rows } = await requestIndexRows(
+        item.symbol,
+        token,
+        tradingDate
+      );
       lastUrl = url;
 
       if (rows.length > 0) {
@@ -196,11 +215,12 @@ async function fetchIndex(item, token) {
 app.get("/api/indexes", async (req, res) => {
   try {
     const token = await getAccessToken();
+    const tradingDate = getVietnamDate();
 
     const indexes = [];
 
     for (const item of SYMBOLS) {
-      const indexData = await fetchIndex(item, token);
+      const indexData = await fetchIndex(item, token, tradingDate);
       indexes.push(indexData);
       await sleep(500);
     }
@@ -208,6 +228,7 @@ app.get("/api/indexes", async (req, res) => {
     res.json({
       status: "success",
       data: indexes,
+      tradingDate,
       updatedAt: new Date().toISOString(),
     });
   } catch (error) {
@@ -300,12 +321,18 @@ app.get("/api/test-index", async (req, res) => {
   try {
     const token = await getAccessToken();
     const symbol = req.query.symbol || "HNXIndex";
+    const tradingDate = getVietnamDate();
 
-    const { url, rows, raw } = await requestIndexRows(symbol, token);
+    const { url, rows, raw } = await requestIndexRows(
+      symbol,
+      token,
+      tradingDate
+    );
 
     res.json({
       status: "success",
       symbol,
+      tradingDate,
       url,
       rows,
       raw,
