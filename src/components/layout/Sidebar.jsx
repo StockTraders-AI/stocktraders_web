@@ -11,6 +11,7 @@ import {
   Settings,
   Crown,
   Activity,
+  CandlestickChart,
 } from "lucide-react";
 
 const menus = [
@@ -25,11 +26,12 @@ const menus = [
   { key: "community", label: "Cộng đồng", icon: Users },
   { key: "setting", label: "Cài đặt", icon: Settings },
   { key: "smdt-branch", label: "SMDT Ngành", icon: Activity },
+  { key: "smdt-ticker", label: "SMDT Mã", icon: CandlestickChart },
 ];
 
 export default function Sidebar({ activePage, setActivePage }) {
   return (
-    <aside className="app-sidebar shrink-0 bg-[#071323] border-r border-slate-800 px-4 py-5 flex flex-col justify-between max-[1536px]:px-3 max-[1536px]:py-4 max-[900px]:border-r-0 max-[900px]:border-b max-[900px]:py-2">
+    <aside className="app-sidebar shrink-0 bg-[#020817] border-r border-slate-800 px-4 py-5 flex flex-col justify-between max-[1536px]:px-3 max-[1536px]:py-4 max-[900px]:border-r-0 max-[900px]:border-b max-[900px]:py-2">
       <nav className="space-y-2 max-[1536px]:space-y-1.5 max-[900px]:flex max-[900px]:gap-2 max-[900px]:space-y-0 max-[900px]:overflow-x-auto">
         {menus.map((item) => {
           const Icon = item.icon;

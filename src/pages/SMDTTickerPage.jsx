@@ -11,15 +11,6 @@ import {
   ChevronRight,
 } from "lucide-react";
 
-const CORE_BRANCHES = [
-  "Ngân hàng",
-  "Chứng khoán",
-  "BĐS Dân cư",
-  "Thép",
-  "Xây dựng",
-  "Sóng ngành Vin",
-];
-
 function formatDate(dateString) {
   const date = new Date(dateString);
 
@@ -83,16 +74,15 @@ function getValueClass(value) {
   return "bg-red-100 text-red-700";
 }
 
-export default function SMDTBranchPage({
+export default function SMDTTickerPage({
   activePage,
   setActivePage,
-  smdtBranchData,
-  smdtBranchError,
+  smdtTickerData,
+  smdtTickerError,
 }) {
-  const rawData = useMemo(() => smdtBranchData || [], [smdtBranchData]);
+  const rawData = useMemo(() => smdtTickerData || [], [smdtTickerData]);
   const defaultDateRange = useMemo(() => getDefaultDateRange(), []);
 
-  const [activeTab, setActiveTab] = useState("core");
   const [search, setSearch] = useState("");
   const [fromDate, setFromDate] = useState(defaultDateRange.fromDate);
   const [toDate, setToDate] = useState(defaultDateRange.toDate);
@@ -101,37 +91,31 @@ export default function SMDTBranchPage({
   const [pageSizeInput, setPageSizeInput] = useState("25");
   const [dateSort, setDateSort] = useState("desc");
   const [viewMode, setViewMode] = useState("grid");
-  const branches = useMemo(() => {
+
+  const tickers = useMemo(() => {
     const keyword = search.trim().toLowerCase();
 
     return rawData
       .filter((item) => {
-        const isCore = CORE_BRANCHES.includes(item.keyName);
-
-        if (activeTab === "core" && !isCore) return false;
-        if (activeTab === "sub" && isCore) return false;
-
         if (!keyword) return true;
 
-        return item.keyName.toLowerCase().includes(keyword);
+        return [item.keyValue, item.keyName]
+          .filter(Boolean)
+          .some((value) => value.toLowerCase().includes(keyword));
       })
       .sort((a, b) => {
-        const aIndex = CORE_BRANCHES.indexOf(a.keyName);
-        const bIndex = CORE_BRANCHES.indexOf(b.keyName);
+        const aCode = a.keyValue || a.keyName || "";
+        const bCode = b.keyValue || b.keyName || "";
 
-        if (aIndex !== -1 && bIndex !== -1) return aIndex - bIndex;
-        if (aIndex !== -1) return -1;
-        if (bIndex !== -1) return 1;
-
-        return a.keyName.localeCompare(b.keyName);
+        return aCode.localeCompare(bCode);
       });
-  }, [rawData, activeTab, search]);
+  }, [rawData, search]);
 
   const allDates = useMemo(() => {
     const dateSet = new Set();
 
-    branches.forEach((branch) => {
-      branch.smdts?.forEach((item) => {
+    tickers.forEach((ticker) => {
+      ticker.smdts?.forEach((item) => {
         if (item.date >= fromDate && item.date <= toDate) {
           dateSet.add(item.date);
         }
@@ -141,7 +125,7 @@ export default function SMDTBranchPage({
     return Array.from(dateSet).sort((a, b) =>
       dateSort === "desc" ? b.localeCompare(a) : a.localeCompare(b)
     );
-  }, [branches, fromDate, toDate, dateSort]);
+  }, [tickers, fromDate, toDate, dateSort]);
 
   const totalPages = Math.max(1, Math.ceil(allDates.length / pageSize));
 
@@ -153,18 +137,17 @@ export default function SMDTBranchPage({
   const valueMap = useMemo(() => {
     const map = {};
 
-    branches.forEach((branch) => {
-      map[branch.keyName] = {};
+    tickers.forEach((ticker) => {
+      const key = ticker.keyValue || ticker.keyName;
+      map[key] = {};
 
-      branch.smdts?.forEach((item) => {
-        map[branch.keyName][item.date] = item.smdt;
+      ticker.smdts?.forEach((item) => {
+        map[key][item.date] = item.smdt;
       });
     });
 
     return map;
-  }, [branches]);
-
-  const isCompactTable = branches.length <= CORE_BRANCHES.length;
+  }, [tickers]);
 
   function resetPage() {
     setPage(1);
@@ -194,7 +177,7 @@ export default function SMDTBranchPage({
               <div className="mb-4 md:mb-5 flex items-center justify-between gap-3 md:gap-4 max-[1536px]:mb-3">
                 <div className="flex items-center gap-2">
                   <h1 className="text-[18px] md:text-[21px] lg:text-[23px] font-[700] leading-none tracking-wide max-[1536px]:text-[19px] max-[1280px]:text-[18px]">
-                    BẢNG SMDT NGÀNH
+                    BẢNG SMDT MÃ
                   </h1>
 
                   <span className="flex h-4 w-4 items-center justify-center rounded-full border border-purple-500 text-[10px] font-bold text-purple-600">
@@ -204,44 +187,6 @@ export default function SMDTBranchPage({
               </div>
 
               <div className="mb-4 md:mb-5 flex flex-wrap items-center gap-3 md:gap-4 max-[1536px]:mb-3 max-[1536px]:gap-2">
-                <div className="flex w-full md:w-auto overflow-hidden rounded-2xl border border-slate-200 bg-white max-[1536px]:rounded-xl">
-                  <button
-                    onClick={() => {
-                      setActiveTab("core");
-                      resetPage();
-                    }}
-                    className={[
-                      "flex-1 md:flex-none px-4 md:px-7 py-3 text-sm font-bold max-[1536px]:px-5 max-[1536px]:py-2.5 max-[1536px]:text-xs",
-                      activeTab === "core"
-                        ? "bg-purple-700 text-white rounded-2xl"
-                        : "bg-white text-slate-900"
-                    ].join(" ")}
-                  >
-                    Chủ lực{" "}
-                    <span className="ml-2 rounded-full bg-white/20 px-2">
-                      6
-                    </span>
-                  </button>
-
-                  <button
-                    onClick={() => {
-                      setActiveTab("sub");
-                      resetPage();
-                    }}
-                    className={[
-                      "flex-1 md:flex-none px-4 md:px-7 py-3 text-sm font-bold max-[1536px]:px-5 max-[1536px]:py-2.5 max-[1536px]:text-xs",
-                      activeTab === "sub"
-                        ? "bg-purple-700 text-white rounded-2xl"
-                        : "bg-white text-slate-900"
-                    ].join(" ")}
-                  >
-                    Ngành phụ{" "}
-                    <span className="ml-2 rounded-full bg-slate-100 px-2 text-slate-700">
-                      {Math.max(0, rawData.length - 6)}
-                    </span>
-                  </button>
-                </div>
-
                 <div className="flex w-full md:w-auto items-center gap-2 md:gap-3 rounded-2xl border border-slate-200 px-3 md:px-4 py-3 max-[1536px]:rounded-xl max-[1536px]:px-3 max-[1536px]:py-2.5 max-[1536px]:text-sm">
                   <CalendarDays size={18} />
                   <input
@@ -319,25 +264,20 @@ export default function SMDTBranchPage({
                       setSearch(e.target.value);
                       resetPage();
                     }}
-                    placeholder="Tìm ngành..."
+                    placeholder="Tìm mã..."
                     className="w-full outline-none"
                   />
                 </div>
               </div>
 
-              {smdtBranchError && (
+              {smdtTickerError && (
                 <div className="mb-4 rounded-2xl bg-red-50 p-4 text-sm text-red-600">
-                  {smdtBranchError}
+                  {smdtTickerError}
                 </div>
               )}
 
               <div className="w-full max-w-full overflow-x-auto overflow-y-hidden rounded-2xl border border-slate-200 max-[1536px]:rounded-xl">
-                <table
-                  className={[
-                    "smdt-table border-collapse text-center",
-                    isCompactTable ? "smdt-table-fit" : "smdt-table-scroll",
-                  ].join(" ")}
-                >
+                <table className="smdt-table smdt-table-scroll border-collapse text-center">
                   <thead>
                     <tr className="bg-white">
                       <th className="smdt-date-cell sticky left-0 z-10 border-b border-r border-slate-200 bg-white px-4 md:px-6 lg:px-8 py-4 lg:py-5 text-[11px] md:text-xs font-black max-[1536px]:px-1.5 max-[1536px]:py-2 max-[1536px]:text-[9px] max-[1280px]:text-[8px]">
@@ -357,14 +297,19 @@ export default function SMDTBranchPage({
                         </button>
                       </th>
 
-                      {branches.map((branch) => (
-                        <th
-                          key={branch.keyName}
-                          className="smdt-branch-cell border-b border-r border-slate-200 px-4 md:px-6 lg:px-8 py-4 lg:py-5 text-[11px] md:text-xs lg:text-sm font-[700] leading-tight uppercase max-[1536px]:px-1.5 max-[1536px]:py-2 max-[1536px]:text-[8px] max-[1280px]:text-[8px]"
-                        >
-                          {branch.keyName}
-                        </th>
-                      ))}
+                      {tickers.map((ticker) => {
+                        const key = ticker.keyValue || ticker.keyName;
+
+                        return (
+                          <th
+                            key={key}
+                            title={ticker.keyName}
+                            className="smdt-branch-cell border-b border-r border-slate-200 px-4 md:px-6 lg:px-8 py-4 lg:py-5 text-[11px] md:text-xs lg:text-sm font-[700] leading-tight uppercase max-[1536px]:px-1.5 max-[1536px]:py-2 max-[1536px]:text-[8px] max-[1280px]:text-[8px]"
+                          >
+                            {key}
+                          </th>
+                        );
+                      })}
                     </tr>
                   </thead>
 
@@ -375,12 +320,13 @@ export default function SMDTBranchPage({
                           {formatDate(date)}
                         </td>
 
-                        {branches.map((branch) => {
-                          const value = valueMap[branch.keyName]?.[date];
+                        {tickers.map((ticker) => {
+                          const key = ticker.keyValue || ticker.keyName;
+                          const value = valueMap[key]?.[date];
 
                           return (
                             <td
-                              key={`${branch.keyName}-${date}`}
+                              key={`${key}-${date}`}
                               className="smdt-branch-cell border-r border-slate-100 px-4 md:px-6 lg:px-8 py-3 lg:py-4 max-[1536px]:px-1.5 max-[1536px]:py-1.5"
                             >
                               <span
@@ -422,6 +368,7 @@ export default function SMDTBranchPage({
                     <span>&lt; 20</span>
                   </span>
                 </div>
+
                 <div className="flex items-center gap-2">
                   <button
                     disabled={page <= 1}

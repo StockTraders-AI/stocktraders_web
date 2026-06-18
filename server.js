@@ -25,10 +25,13 @@ app.use(express.json());
 const PORT = 4005;
 
 const CACHE_FILE = path.resolve("cache/smdt-branch.json");
-const SMDT_BRANCH_CACHE_MS = 15 * 60 * 1000;
+const TICKER_CACHE_FILE = path.resolve("cache/smdt-ticker.json");
+const SMDT_CACHE_MS = 3 * 60 * 1000;
 
 let smdtBranchCache = null;
 let smdtBranchCacheTime = 0;
+let smdtTickerCache = null;
+let smdtTickerCacheTime = 0;
 
 try {
   if (fs.existsSync(CACHE_FILE)) {
@@ -41,6 +44,19 @@ try {
   }
 } catch (error) {
   console.error("Load SMDT Branch cache error:", error.message);
+}
+
+try {
+  if (fs.existsSync(TICKER_CACHE_FILE)) {
+    const cache = JSON.parse(fs.readFileSync(TICKER_CACHE_FILE, "utf8"));
+
+    smdtTickerCache = cache.data;
+    smdtTickerCacheTime = new Date(cache.updatedAt).getTime();
+
+    console.log("Loaded SMDT Ticker cache:", cache.updatedAt);
+  }
+} catch (error) {
+  console.error("Load SMDT Ticker cache error:", error.message);
 }
 
 const SYMBOLS = [
@@ -249,7 +265,7 @@ app.post("/api/smdt-branch", async (req, res) => {
     if (smdtBranchCache) {
       const age = now - smdtBranchCacheTime;
 
-      if (age < SMDT_BRANCH_CACHE_MS) {
+      if (age < SMDT_CACHE_MS) {
         return res.json({
           ...smdtBranchCache,
           cache: true,
@@ -312,6 +328,81 @@ app.post("/api/smdt-branch", async (req, res) => {
     return res.status(500).json({
       status: "error",
       message: "Cannot load SMDT Branch data",
+      detail: error.response?.data || error.message,
+    });
+  }
+});
+
+app.post("/api/smdt-ticker", async (req, res) => {
+  const now = Date.now();
+
+  try {
+    if (smdtTickerCache) {
+      const age = now - smdtTickerCacheTime;
+
+      if (age < SMDT_CACHE_MS) {
+        return res.json({
+          ...smdtTickerCache,
+          cache: true,
+          cacheAgeSeconds: Math.floor(age / 1000),
+        });
+      }
+    }
+
+    const response = await axios.post(
+      "https://stocktraders.vn/service/data/getSMDTTicker",
+      {
+        SMDTTickerRequest: {
+          account: "StockTraders",
+        },
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        timeout: 40000,
+      }
+    );
+
+    smdtTickerCache = response.data;
+    smdtTickerCacheTime = now;
+
+    fs.mkdirSync(path.dirname(TICKER_CACHE_FILE), { recursive: true });
+
+    fs.writeFileSync(
+      TICKER_CACHE_FILE,
+      JSON.stringify(
+        {
+          updatedAt: new Date(now).toISOString(),
+          data: response.data,
+        },
+        null,
+        2
+      )
+    );
+
+    return res.json({
+      ...response.data,
+      cache: false,
+      cacheAgeSeconds: 0,
+    });
+  } catch (error) {
+    console.error(
+      "SMDT Ticker API error:",
+      error.response?.data || error.message
+    );
+
+    if (smdtTickerCache) {
+      return res.json({
+        ...smdtTickerCache,
+        cache: true,
+        stale: true,
+      });
+    }
+
+    return res.status(500).json({
+      status: "error",
+      message: "Cannot load SMDT Ticker data",
       detail: error.response?.data || error.message,
     });
   }
