@@ -193,9 +193,15 @@ body {
     font-size: 12px;
   }
 
-  .st-table-date-header,
-  .st-table-date-body,
+  .st-table-date-body {
+    font-size: 10px;
+  }
+
   .st-value-pill {
+    font-size: 11px;
+  }
+
+  .st-table-date-header {
     font-size: 9px;
   }
 
@@ -231,7 +237,10 @@ body {
   }
 
   .st-table-date-header,
-  .st-table-date-body,
+  .st-table-date-body {
+    font-size: 9px;
+  }
+
   .st-value-pill {
     font-size: 8px;
   }
