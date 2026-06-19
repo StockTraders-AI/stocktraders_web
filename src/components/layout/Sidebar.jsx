@@ -12,6 +12,7 @@ import {
   Crown,
   Activity,
   CandlestickChart,
+  BadgeDollarSign,
 } from "lucide-react";
 
 const menus = [
@@ -25,6 +26,7 @@ const menus = [
   { key: "knowledge", label: "Kiến thức", icon: BookOpen },
   { key: "community", label: "Cộng đồng", icon: Users },
   { key: "setting", label: "Cài đặt", icon: Settings },
+  { key: "cash-flow-branch", label: "Dòng tiền ngành", icon: BadgeDollarSign },
   { key: "smdt-branch", label: "SMDT Ngành", icon: Activity },
   { key: "smdt-ticker", label: "SMDT Mã", icon: CandlestickChart },
 ];

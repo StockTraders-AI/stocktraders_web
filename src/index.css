@@ -84,6 +84,71 @@ body {
   min-width: 0;
 }
 
+.st-page-title {
+  font-size: 23px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.st-tab-button {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.st-toolbar-control {
+  font-size: 14px;
+  line-height: 1.2;
+}
+
+.st-toolbar-input,
+.st-toolbar-select {
+  font-size: 14px;
+  line-height: 1.2;
+}
+
+.st-table-date-header {
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.st-table-col-header {
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0;
+}
+
+.st-table-date-body {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.st-value-pill {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.st-status-pill {
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.st-legend {
+  font-size: 14px;
+  line-height: 1.2;
+}
+
+.st-error {
+  font-size: 14px;
+  line-height: 1.4;
+}
+
 @media (max-width: 1536px) {
   :root {
     --app-header-height: 68px;
@@ -114,6 +179,30 @@ body {
   .smdt-table-fit .smdt-branch-cell {
     min-width: 0;
   }
+
+  .st-page-title {
+    font-size: 19px;
+  }
+
+  .st-tab-button,
+  .st-toolbar-control,
+  .st-toolbar-input,
+  .st-toolbar-select,
+  .st-legend,
+  .st-error {
+    font-size: 12px;
+  }
+
+  .st-table-date-header,
+  .st-table-date-body,
+  .st-value-pill {
+    font-size: 9px;
+  }
+
+  .st-table-col-header,
+  .st-status-pill {
+    font-size: 8px;
+  }
 }
 
 @media (max-width: 1280px) {
@@ -135,6 +224,21 @@ body {
   .smdt-branch-cell {
     width: 96px;
     min-width: 96px;
+  }
+
+  .st-page-title {
+    font-size: 18px;
+  }
+
+  .st-table-date-header,
+  .st-table-date-body,
+  .st-value-pill {
+    font-size: 8px;
+  }
+
+  .st-table-col-header,
+  .st-status-pill {
+    font-size: 7px;
   }
 }
 

@@ -26,12 +26,15 @@ const PORT = 4005;
 
 const CACHE_FILE = path.resolve("cache/smdt-branch.json");
 const TICKER_CACHE_FILE = path.resolve("cache/smdt-ticker.json");
+const CASH_FLOW_BRANCH_CACHE_FILE = path.resolve("cache/cash-flow-branch.json");
 const SMDT_CACHE_MS = 3 * 60 * 1000;
 
 let smdtBranchCache = null;
 let smdtBranchCacheTime = 0;
 let smdtTickerCache = null;
 let smdtTickerCacheTime = 0;
+let cashFlowBranchCache = null;
+let cashFlowBranchCacheTime = 0;
 
 try {
   if (fs.existsSync(CACHE_FILE)) {
@@ -57,6 +60,21 @@ try {
   }
 } catch (error) {
   console.error("Load SMDT Ticker cache error:", error.message);
+}
+
+try {
+  if (fs.existsSync(CASH_FLOW_BRANCH_CACHE_FILE)) {
+    const cache = JSON.parse(
+      fs.readFileSync(CASH_FLOW_BRANCH_CACHE_FILE, "utf8")
+    );
+
+    cashFlowBranchCache = cache.data;
+    cashFlowBranchCacheTime = new Date(cache.updatedAt).getTime();
+
+    console.log("Loaded Cash Flow Branch cache:", cache.updatedAt);
+  }
+} catch (error) {
+  console.error("Load Cash Flow Branch cache error:", error.message);
 }
 
 
@@ -404,6 +422,83 @@ app.post("/api/smdt-ticker", async (req, res) => {
     return res.status(500).json({
       status: "error",
       message: "Cannot load SMDT Ticker data",
+      detail: error.response?.data || error.message,
+    });
+  }
+});
+
+app.post("/api/cash-flow-branch", async (req, res) => {
+  const now = Date.now();
+
+  try {
+    if (cashFlowBranchCache) {
+      const age = now - cashFlowBranchCacheTime;
+
+      if (age < SMDT_CACHE_MS) {
+        return res.json({
+          ...cashFlowBranchCache,
+          cache: true,
+          cacheAgeSeconds: Math.floor(age / 1000),
+        });
+      }
+    }
+
+    const response = await axios.post(
+      "https://stocktraders.vn/service/data/getCashFlowBranch",
+      {
+        CashFlowBranchRequest: {
+          account: "StockTraders",
+        },
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        timeout: 40000,
+      }
+    );
+
+    cashFlowBranchCache = response.data;
+    cashFlowBranchCacheTime = now;
+
+    fs.mkdirSync(path.dirname(CASH_FLOW_BRANCH_CACHE_FILE), {
+      recursive: true,
+    });
+
+    fs.writeFileSync(
+      CASH_FLOW_BRANCH_CACHE_FILE,
+      JSON.stringify(
+        {
+          updatedAt: new Date(now).toISOString(),
+          data: response.data,
+        },
+        null,
+        2
+      )
+    );
+
+    return res.json({
+      ...response.data,
+      cache: false,
+      cacheAgeSeconds: 0,
+    });
+  } catch (error) {
+    console.error(
+      "Cash Flow Branch API error:",
+      error.response?.data || error.message
+    );
+
+    if (cashFlowBranchCache) {
+      return res.json({
+        ...cashFlowBranchCache,
+        cache: true,
+        stale: true,
+      });
+    }
+
+    return res.status(500).json({
+      status: "error",
+      message: "Cannot load Cash Flow Branch data",
       detail: error.response?.data || error.message,
     });
   }

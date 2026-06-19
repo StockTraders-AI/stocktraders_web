@@ -178,7 +178,7 @@ export default function SMDTTickerPage({
             <div className="w-full max-w-full overflow-hidden rounded-2xl lg:rounded-3xl border border-slate-200 bg-white p-3 md:p-4 lg:p-5 shadow-sm max-[1536px]:rounded-2xl max-[1536px]:p-3 max-[1280px]:p-3">
               <div className="mb-4 md:mb-5 flex items-center justify-between gap-3 md:gap-4 max-[1536px]:mb-3">
                 <div className="flex items-center gap-2">
-                  <h1 className="text-[18px] md:text-[21px] lg:text-[23px] font-[700] leading-none tracking-wide max-[1536px]:text-[19px] max-[1280px]:text-[18px]">
+                  <h1 className="st-page-title">
                     BẢNG SMDT MÃ
                   </h1>
 
@@ -189,7 +189,7 @@ export default function SMDTTickerPage({
               </div>
 
               <div className="mb-4 md:mb-5 flex flex-wrap xl:flex-nowrap items-center gap-3 md:gap-4 max-[1536px]:mb-3 max-[1536px]:gap-2">
-                <div className="flex w-full md:w-auto shrink-0 items-center gap-1.5 rounded-2xl border border-slate-200 px-3 md:px-3 py-2.5 max-[1536px]:rounded-xl max-[1536px]:px-2.5 max-[1536px]:py-1.5 max-[1536px]:text-xs">
+                <div className="flex w-full md:w-auto shrink-0 items-center gap-1.5 rounded-2xl border border-slate-200 px-3 md:px-3 py-2.5 st-toolbar-control max-[1536px]:rounded-xl max-[1536px]:px-2.5 max-[1536px]:py-1.5">
                   <CalendarDays className="h-4 w-4 shrink-0 max-[1536px]:h-3.5 max-[1536px]:w-3.5" />
                   <input
                     type="date"
@@ -198,7 +198,7 @@ export default function SMDTTickerPage({
                       setFromDate(e.target.value);
                       resetPage();
                     }}
-                    className="w-[112px] shrink-0 text-center outline-none text-xs md:text-sm max-[1536px]:w-[96px] max-[1536px]:text-[11px]"
+                    className="w-[112px] shrink-0 text-center outline-none st-toolbar-input max-[1536px]:w-[96px]"
                   />
                   <span className="shrink-0">→</span>
                   <input
@@ -208,11 +208,11 @@ export default function SMDTTickerPage({
                       setToDate(e.target.value);
                       resetPage();
                     }}
-                    className="w-[112px] shrink-0 text-center outline-none text-xs md:text-sm max-[1536px]:w-[96px] max-[1536px]:text-[11px]"
+                    className="w-[112px] shrink-0 text-center outline-none st-toolbar-input max-[1536px]:w-[96px]"
                   />
                 </div>
 
-                <div className="flex w-full md:w-auto items-center gap-2 rounded-2xl border border-slate-200 px-3 md:px-4 py-3 text-sm max-[1536px]:rounded-xl max-[1536px]:px-3 max-[1536px]:py-2.5 max-[1536px]:text-xs">
+                <div className="flex w-full md:w-auto items-center gap-2 rounded-2xl border border-slate-200 px-3 md:px-4 py-3 st-toolbar-control max-[1536px]:rounded-xl max-[1536px]:px-3 max-[1536px]:py-2.5">
                   <span>Hiển thị</span>
 
                   <input
@@ -257,7 +257,7 @@ export default function SMDTTickerPage({
                   </button>
                 </div>
 
-                <div className="flex w-full md:w-56 lg:w-60 items-center gap-2 rounded-2xl border border-slate-200 px-4 py-3 text-sm max-[1536px]:w-48 max-[1536px]:rounded-xl max-[1536px]:px-3 max-[1536px]:py-2 max-[1536px]:text-xs max-[1180px]:w-auto">
+                <div className="flex w-full md:w-56 lg:w-60 items-center gap-2 rounded-2xl border border-slate-200 px-4 py-3 st-toolbar-control max-[1536px]:w-48 max-[1536px]:rounded-xl max-[1536px]:px-3 max-[1536px]:py-2 max-[1180px]:w-auto">
                   <span className="shrink-0">Ngành</span>
                   <select
                     value={selectedBranch}
@@ -265,7 +265,7 @@ export default function SMDTTickerPage({
                       setSelectedBranch(e.target.value);
                       resetPage();
                     }}
-                    className="min-w-0 flex-1 appearance-none rounded-lg bg-white px-2 py-1 text-slate-900 outline-none"
+                    className="min-w-0 flex-1 appearance-none rounded-lg bg-white px-2 py-1 st-toolbar-select text-slate-900 outline-none"
                   >
                     <option value="">
                       {branchPaths.length ? "Tất cả ngành" : "Đang tải ngành..."}
@@ -292,13 +292,13 @@ export default function SMDTTickerPage({
                       resetPage();
                     }}
                     placeholder="Tìm mã..."
-                    className="min-w-0 flex-1 outline-none max-[1180px]:hidden"
+                    className="min-w-0 flex-1 st-toolbar-input outline-none max-[1180px]:hidden"
                   />
                 </div>
               </div>
 
               {smdtTickerError && (
-                <div className="mb-4 rounded-2xl bg-red-50 p-4 text-sm text-red-600">
+                <div className="mb-4 rounded-2xl bg-red-50 p-4 st-error text-red-600">
                   {smdtTickerError}
                 </div>
               )}
@@ -307,7 +307,7 @@ export default function SMDTTickerPage({
                 <table className="smdt-table smdt-table-scroll border-collapse text-center">
                   <thead>
                     <tr className="bg-white">
-                      <th className="smdt-date-cell sticky left-0 z-10 border-b border-r border-slate-200 bg-white px-4 md:px-6 lg:px-8 py-4 lg:py-5 text-[11px] md:text-xs font-black max-[1536px]:px-1.5 max-[1536px]:py-2 max-[1536px]:text-[9px] max-[1280px]:text-[8px]">
+                      <th className="smdt-date-cell sticky left-0 z-10 border-b border-r border-slate-200 bg-white px-4 md:px-6 lg:px-8 py-4 lg:py-5 st-table-date-header max-[1536px]:px-1.5 max-[1536px]:py-2">
                         <button
                           type="button"
                           onClick={() => {
@@ -331,7 +331,7 @@ export default function SMDTTickerPage({
                           <th
                             key={key}
                             title={ticker.keyName}
-                            className="smdt-branch-cell border-b border-r border-slate-200 px-4 md:px-6 lg:px-8 py-4 lg:py-5 text-[11px] md:text-xs lg:text-sm font-[700] leading-tight uppercase max-[1536px]:px-1.5 max-[1536px]:py-2 max-[1536px]:text-[8px] max-[1280px]:text-[8px]"
+                            className="smdt-branch-cell border-b border-r border-slate-200 px-4 md:px-6 lg:px-8 py-4 lg:py-5 st-table-col-header uppercase max-[1536px]:px-1.5 max-[1536px]:py-2"
                           >
                             {key} (%)
                           </th>
@@ -343,7 +343,7 @@ export default function SMDTTickerPage({
                   <tbody>
                     {pageDates.map((date) => (
                       <tr key={date}>
-                        <td className="smdt-date-cell sticky left-0 z-10 border-r border-slate-100 bg-white px-4 md:px-6 lg:px-8 py-4 lg:py-5 text-[11px] md:text-xs lg:text-sm font-[700] leading-none max-[1536px]:px-1.5 max-[1536px]:py-2 max-[1536px]:text-[9px] max-[1280px]:text-[8px]">
+                        <td className="smdt-date-cell sticky left-0 z-10 border-r border-slate-100 bg-white px-4 md:px-6 lg:px-8 py-4 lg:py-5 st-table-date-body max-[1536px]:px-1.5 max-[1536px]:py-2">
                           {formatDate(date)}
                         </td>
 
@@ -358,7 +358,7 @@ export default function SMDTTickerPage({
                             >
                               <span
                                 className={[
-                                  "inline-flex min-w-[60px] md:min-w-[68px] lg:min-w-[76px] justify-center rounded-xl px-2.5 lg:px-3 py-1.5 lg:py-2 text-[11px] md:text-xs lg:text-sm font-[700] leading-none max-[1536px]:min-w-[40px] max-[1536px]:rounded-md max-[1536px]:px-1.5 max-[1536px]:py-1 max-[1536px]:text-[9px] max-[1280px]:min-w-[36px] max-[1280px]:text-[8px]",
+                                  "inline-flex min-w-[60px] md:min-w-[68px] lg:min-w-[76px] justify-center rounded-xl px-2.5 lg:px-3 py-1.5 lg:py-2 st-value-pill max-[1536px]:min-w-[40px] max-[1536px]:rounded-md max-[1536px]:px-1.5 max-[1536px]:py-1 max-[1280px]:min-w-[36px]",
                                   getValueClass(value),
                                 ].join(" ")}
                               >
@@ -376,7 +376,7 @@ export default function SMDTTickerPage({
               </div>
 
               <div className="mt-5 md:mt-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <div className="flex flex-wrap items-center gap-3 md:gap-5 text-xs md:text-sm text-slate-600">
+                <div className="flex flex-wrap items-center gap-3 md:gap-5 st-legend text-slate-600">
                   <span className="font-medium">CHÚ THÍCH:</span>
                   <span className="flex items-center gap-2">
                     <i className="h-4 w-4 rounded bg-green-200"></i>
