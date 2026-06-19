@@ -205,7 +205,7 @@ export default function SMDTBranchPage({
                 </div>
               </div>
 
-              <div className="mb-4 md:mb-5 flex flex-wrap items-center gap-3 md:gap-4 max-[1536px]:mb-3 max-[1536px]:gap-2">
+              <div className="mb-4 md:mb-5 flex flex-wrap xl:flex-nowrap items-center gap-3 md:gap-4 max-[1536px]:mb-3 max-[1536px]:gap-2">
                 <div className="flex w-full md:w-auto overflow-hidden rounded-2xl border border-slate-200 bg-white max-[1536px]:rounded-xl">
                   <button
                     onClick={() => {
@@ -244,7 +244,7 @@ export default function SMDTBranchPage({
                   </button>
                 </div>
 
-                <div className="flex w-full md:w-auto items-center gap-2 md:gap-3 rounded-2xl border border-slate-200 px-3 md:px-4 py-3 max-[1536px]:rounded-xl max-[1536px]:px-3 max-[1536px]:py-2.5 max-[1536px]:text-sm">
+                <div className="flex w-full md:w-auto shrink-0 items-center gap-2 rounded-2xl border border-slate-200 px-3 md:px-4 py-3 max-[1536px]:rounded-xl max-[1536px]:px-3 max-[1536px]:py-2 max-[1536px]:text-xs">
                   <CalendarDays size={18} />
                   <input
                     type="date"
@@ -253,9 +253,9 @@ export default function SMDTBranchPage({
                       setFromDate(e.target.value);
                       resetPage();
                     }}
-                    className="min-w-0 flex-1 md:flex-none outline-none text-sm md:text-base max-[1536px]:text-sm"
+                    className="w-[128px] shrink-0 text-center outline-none text-sm md:text-base max-[1536px]:w-[112px] max-[1536px]:text-xs"
                   />
-                  <span>→</span>
+                  <span className="shrink-0">→</span>
                   <input
                     type="date"
                     value={toDate}
@@ -263,7 +263,7 @@ export default function SMDTBranchPage({
                       setToDate(e.target.value);
                       resetPage();
                     }}
-                    className="min-w-0 outline-none max-[1536px]:text-sm"
+                    className="w-[128px] shrink-0 text-center outline-none text-sm md:text-base max-[1536px]:w-[112px] max-[1536px]:text-xs"
                   />
                 </div>
 
@@ -313,8 +313,8 @@ export default function SMDTBranchPage({
                   </button>
                 </div>
 
-                <div className="flex w-full md:ml-auto md:w-auto md:min-w-65 items-center gap-2 rounded-2xl border border-slate-200 px-4 py-3 max-[1536px]:min-w-56 max-[1536px]:rounded-xl max-[1536px]:px-3 max-[1536px]:py-2.5 max-[1280px]:md:min-w-48">
-                  <Search size={18} />
+                <div className="flex w-full md:ml-0 md:w-48 xl:ml-auto items-center gap-2 rounded-2xl border border-slate-200 px-4 py-3 max-[1536px]:w-42 max-[1536px]:rounded-xl max-[1536px]:px-3 max-[1536px]:py-2 max-[1180px]:w-auto">
+                  <Search size={18} className="shrink-0" />
                   <input
                     value={search}
                     onChange={(e) => {
@@ -322,7 +322,7 @@ export default function SMDTBranchPage({
                       resetPage();
                     }}
                     placeholder="Tìm ngành..."
-                    className="w-full outline-none"
+                    className="min-w-0 flex-1 outline-none max-[1180px]:hidden"
                   />
                 </div>
               </div>
