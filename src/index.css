@@ -109,13 +109,13 @@ body {
 }
 
 .st-table-date-header {
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 800;
   line-height: 1;
 }
 
 .st-table-col-header {
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   line-height: 1.2;
   letter-spacing: 0;
@@ -194,20 +194,23 @@ body {
   }
 
   .st-table-date-body {
-    font-size: 10px;
+    font-size: 12px;
   }
 
   .st-value-pill {
-    font-size: 11px;
+    font-size: 12px;
   }
 
   .st-table-date-header {
-    font-size: 9px;
+    font-size: 12px;
   }
 
-  .st-table-col-header,
+  .st-table-col-header {
+    font-size: 12px;
+  }
+
   .st-status-pill {
-    font-size: 8px;
+    font-size: 11px;
   }
 }
 
@@ -238,16 +241,19 @@ body {
 
   .st-table-date-header,
   .st-table-date-body {
-    font-size: 9px;
+    font-size: 10px;
   }
 
   .st-value-pill {
-    font-size: 8px;
+    font-size: 10px;
   }
 
-  .st-table-col-header,
+  .st-table-col-header {
+    font-size: 10px;
+  }
+
   .st-status-pill {
-    font-size: 7px;
+    font-size: 9px;
   }
 }
 
