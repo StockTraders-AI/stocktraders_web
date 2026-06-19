@@ -189,8 +189,8 @@ export default function SMDTTickerPage({
               </div>
 
               <div className="mb-4 md:mb-5 flex flex-wrap xl:flex-nowrap items-center gap-3 md:gap-4 max-[1536px]:mb-3 max-[1536px]:gap-2">
-                <div className="flex w-full md:w-auto shrink-0 items-center gap-2 rounded-2xl border border-slate-200 px-3 md:px-4 py-3 max-[1536px]:rounded-xl max-[1536px]:px-3 max-[1536px]:py-2 max-[1536px]:text-xs">
-                  <CalendarDays size={18} />
+                <div className="flex w-full md:w-auto shrink-0 items-center gap-1.5 rounded-2xl border border-slate-200 px-3 md:px-3 py-2.5 max-[1536px]:rounded-xl max-[1536px]:px-2.5 max-[1536px]:py-1.5 max-[1536px]:text-xs">
+                  <CalendarDays className="h-4 w-4 shrink-0 max-[1536px]:h-3.5 max-[1536px]:w-3.5" />
                   <input
                     type="date"
                     value={fromDate}
@@ -198,7 +198,7 @@ export default function SMDTTickerPage({
                       setFromDate(e.target.value);
                       resetPage();
                     }}
-                    className="w-[128px] shrink-0 text-center outline-none text-sm md:text-base max-[1536px]:w-[112px] max-[1536px]:text-xs"
+                    className="w-[112px] shrink-0 text-center outline-none text-xs md:text-sm max-[1536px]:w-[96px] max-[1536px]:text-[11px]"
                   />
                   <span className="shrink-0">→</span>
                   <input
@@ -208,7 +208,7 @@ export default function SMDTTickerPage({
                       setToDate(e.target.value);
                       resetPage();
                     }}
-                    className="w-[128px] shrink-0 text-center outline-none text-sm md:text-base max-[1536px]:w-[112px] max-[1536px]:text-xs"
+                    className="w-[112px] shrink-0 text-center outline-none text-xs md:text-sm max-[1536px]:w-[96px] max-[1536px]:text-[11px]"
                   />
                 </div>
 
