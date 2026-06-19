@@ -98,7 +98,6 @@ export default function SMDTBranchPage({
   const [toDate, setToDate] = useState(defaultDateRange.toDate);
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(25);
-  const [pageSizeInput, setPageSizeInput] = useState("25");
   const [dateSort, setDateSort] = useState("desc");
   const [viewMode, setViewMode] = useState("grid");
   const branches = useMemo(() => {
@@ -169,17 +168,6 @@ export default function SMDTBranchPage({
   const isCompactTable = branches.length <= CORE_BRANCHES.length;
 
   function resetPage() {
-    setPage(1);
-  }
-
-  function applyPageSizeInput() {
-    const nextPageSize = Math.min(
-      500,
-      Math.max(1, Number(pageSizeInput) || 25)
-    );
-
-    setPageSize(nextPageSize);
-    setPageSizeInput(String(nextPageSize));
     setPage(1);
   }
 
@@ -274,16 +262,15 @@ export default function SMDTBranchPage({
                     type="number"
                     min="1"
                     max="500"
-                    value={pageSizeInput}
+                    value={pageSize}
                     onChange={(e) => {
-                      setPageSizeInput(e.target.value);
-                    }}
-                    onBlur={applyPageSizeInput}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") {
-                        applyPageSizeInput();
-                        e.currentTarget.blur();
-                      }
+                      const nextPageSize = Math.min(
+                        500,
+                        Math.max(1, Number(e.target.value) || 25)
+                      );
+
+                      setPageSize(nextPageSize);
+                      setPage(1);
                     }}
                     className="w-20 rounded-lg border border-slate-200 px-2 py-1 text-center outline-none max-[1536px]:w-16"
                   />
