@@ -27,6 +27,7 @@ const PORT = 4005;
 const CACHE_FILE = path.resolve("cache/smdt-branch.json");
 const TICKER_CACHE_FILE = path.resolve("cache/smdt-ticker.json");
 const CASH_FLOW_BRANCH_CACHE_FILE = path.resolve("cache/cash-flow-branch.json");
+const CASH_FLOW_TICKER_CACHE_FILE = path.resolve("cache/cash-flow-ticker.json");
 const SMDT_CACHE_MS = 3 * 60 * 1000;
 
 let smdtBranchCache = null;
@@ -35,6 +36,8 @@ let smdtTickerCache = null;
 let smdtTickerCacheTime = 0;
 let cashFlowBranchCache = null;
 let cashFlowBranchCacheTime = 0;
+let cashFlowTickerCache = null;
+let cashFlowTickerCacheTime = 0;
 
 try {
   if (fs.existsSync(CACHE_FILE)) {
@@ -75,6 +78,21 @@ try {
   }
 } catch (error) {
   console.error("Load Cash Flow Branch cache error:", error.message);
+}
+
+try {
+  if (fs.existsSync(CASH_FLOW_TICKER_CACHE_FILE)) {
+    const cache = JSON.parse(
+      fs.readFileSync(CASH_FLOW_TICKER_CACHE_FILE, "utf8")
+    );
+
+    cashFlowTickerCache = cache.data;
+    cashFlowTickerCacheTime = new Date(cache.updatedAt).getTime();
+
+    console.log("Loaded Cash Flow Ticker cache:", cache.updatedAt);
+  }
+} catch (error) {
+  console.error("Load Cash Flow Ticker cache error:", error.message);
 }
 
 
@@ -499,6 +517,83 @@ app.post("/api/cash-flow-branch", async (req, res) => {
     return res.status(500).json({
       status: "error",
       message: "Cannot load Cash Flow Branch data",
+      detail: error.response?.data || error.message,
+    });
+  }
+});
+
+app.post("/api/cash-flow-ticker", async (req, res) => {
+  const now = Date.now();
+
+  try {
+    if (cashFlowTickerCache) {
+      const age = now - cashFlowTickerCacheTime;
+
+      if (age < SMDT_CACHE_MS) {
+        return res.json({
+          ...cashFlowTickerCache,
+          cache: true,
+          cacheAgeSeconds: Math.floor(age / 1000),
+        });
+      }
+    }
+
+    const response = await axios.post(
+      "https://stocktraders.vn/service/data/getCashFlowTicker",
+      {
+        CashFlowTickerRequest: {
+          account: "StockTraders",
+        },
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        timeout: 40000,
+      }
+    );
+
+    cashFlowTickerCache = response.data;
+    cashFlowTickerCacheTime = now;
+
+    fs.mkdirSync(path.dirname(CASH_FLOW_TICKER_CACHE_FILE), {
+      recursive: true,
+    });
+
+    fs.writeFileSync(
+      CASH_FLOW_TICKER_CACHE_FILE,
+      JSON.stringify(
+        {
+          updatedAt: new Date(now).toISOString(),
+          data: response.data,
+        },
+        null,
+        2
+      )
+    );
+
+    return res.json({
+      ...response.data,
+      cache: false,
+      cacheAgeSeconds: 0,
+    });
+  } catch (error) {
+    console.error(
+      "Cash Flow Ticker API error:",
+      error.response?.data || error.message
+    );
+
+    if (cashFlowTickerCache) {
+      return res.json({
+        ...cashFlowTickerCache,
+        cache: true,
+        stale: true,
+      });
+    }
+
+    return res.status(500).json({
+      status: "error",
+      message: "Cannot load Cash Flow Ticker data",
       detail: error.response?.data || error.message,
     });
   }

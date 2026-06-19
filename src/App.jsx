@@ -3,6 +3,7 @@ import Dashboard from "./pages/Dashboard";
 import SMDTBranchPage from "./pages/SMDTBranchPage";
 import SMDTTickerPage from "./pages/SMDTTickerPage";
 import CashFlowBranchPage from "./pages/CashFlowBranchPage";
+import CashFlowTickerPage from "./pages/CashFlowTickerPage";
 
 const SMDT_REFRESH_MS = 3 * 60 * 1000;
 
@@ -18,6 +19,9 @@ function App() {
   const [cashFlowBranchData, setCashFlowBranchData] = useState([]);
   const [, setCashFlowBranchLoading] = useState(false);
   const [cashFlowBranchError, setCashFlowBranchError] = useState("");
+  const [cashFlowTickerData, setCashFlowTickerData] = useState([]);
+  const [, setCashFlowTickerLoading] = useState(false);
+  const [cashFlowTickerError, setCashFlowTickerError] = useState("");
 
   async function loadSMDTBranch() {
     try {
@@ -101,17 +105,51 @@ function App() {
     }
   }
 
+  async function loadCashFlowTicker() {
+    try {
+      setCashFlowTickerLoading(true);
+      setCashFlowTickerError("");
+
+      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/cash-flow-ticker`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const json = await res.json();
+
+      if (!res.ok) {
+        throw new Error(json.message || "Cannot load Cash Flow Ticker data");
+      }
+
+      setCashFlowTickerData(
+        json?.CashFlowTickerReply?.cashFlowTickers ||
+          json?.CashFlowTickerRequest?.cashFlowTickers ||
+          []
+      );
+    } catch (error) {
+      setCashFlowTickerError(
+        error.message || "Cannot load Cash Flow Ticker data"
+      );
+    } finally {
+      setCashFlowTickerLoading(false);
+    }
+  }
+
   useEffect(() => {
     const firstLoadTimer = setTimeout(() => {
       loadSMDTBranch();
       loadSMDTTicker();
       loadCashFlowBranch();
+      loadCashFlowTicker();
     }, 0);
 
     const intervalTimer = setInterval(() => {
       loadSMDTBranch();
       loadSMDTTicker();
       loadCashFlowBranch();
+      loadCashFlowTicker();
     }, SMDT_REFRESH_MS);
 
     return () => {
@@ -149,6 +187,17 @@ function App() {
         setActivePage={setActivePage}
         cashFlowBranchData={cashFlowBranchData}
         cashFlowBranchError={cashFlowBranchError}
+      />
+    );
+  }
+
+  if (activePage === "cash-flow-ticker") {
+    return (
+      <CashFlowTickerPage
+        activePage={activePage}
+        setActivePage={setActivePage}
+        cashFlowTickerData={cashFlowTickerData}
+        cashFlowTickerError={cashFlowTickerError}
       />
     );
   }
