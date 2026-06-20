@@ -14,6 +14,7 @@ import {
   CandlestickChart,
   BadgeDollarSign,
   CircleDollarSign,
+  Trophy,
 } from "lucide-react";
 
 const menus = [
@@ -27,6 +28,7 @@ const menus = [
   { key: "knowledge", label: "Kiến thức", icon: BookOpen },
   { key: "community", label: "Cộng đồng", icon: Users },
   { key: "setting", label: "Cài đặt", icon: Settings },
+  { key: "top-strong-stocks", label: "Top cổ phiếu mạnh", icon: Trophy },
   { key: "cash-flow-branch", label: "Dòng tiền ngành", icon: BadgeDollarSign },
   { key: "cash-flow-ticker", label: "Dòng tiền mã", icon: CircleDollarSign },
   { key: "smdt-branch", label: "SMDT Ngành", icon: Activity },

@@ -4,6 +4,7 @@ import SMDTBranchPage from "./pages/SMDTBranchPage";
 import SMDTTickerPage from "./pages/SMDTTickerPage";
 import CashFlowBranchPage from "./pages/CashFlowBranchPage";
 import CashFlowTickerPage from "./pages/CashFlowTickerPage";
+import TopStrongStocksPage from "./pages/TopStrongStocksPage";
 
 const SMDT_REFRESH_MS = 3 * 60 * 1000;
 
@@ -22,6 +23,9 @@ function App() {
   const [cashFlowTickerData, setCashFlowTickerData] = useState([]);
   const [, setCashFlowTickerLoading] = useState(false);
   const [cashFlowTickerError, setCashFlowTickerError] = useState("");
+  const [totalTradeRealData, setTotalTradeRealData] = useState([]);
+  const [, setTotalTradeRealLoading] = useState(false);
+  const [totalTradeRealError, setTotalTradeRealError] = useState("");
 
   async function loadSMDTBranch() {
     try {
@@ -137,12 +141,43 @@ function App() {
     }
   }
 
+  async function loadTotalTradeReal() {
+    try {
+      setTotalTradeRealLoading(true);
+      setTotalTradeRealError("");
+
+      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/total-trade-real`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const json = await res.json();
+
+      if (!res.ok) {
+        throw new Error(json.message || "Cannot load Total Trade Real data");
+      }
+
+      setTotalTradeRealData(
+        json?.TotalTradeRealReply?.stockTotalReals || []
+      );
+    } catch (error) {
+      setTotalTradeRealError(
+        error.message || "Cannot load Total Trade Real data"
+      );
+    } finally {
+      setTotalTradeRealLoading(false);
+    }
+  }
+
   useEffect(() => {
     const firstLoadTimer = setTimeout(() => {
       loadSMDTBranch();
       loadSMDTTicker();
       loadCashFlowBranch();
       loadCashFlowTicker();
+      loadTotalTradeReal();
     }, 0);
 
     const intervalTimer = setInterval(() => {
@@ -150,6 +185,7 @@ function App() {
       loadSMDTTicker();
       loadCashFlowBranch();
       loadCashFlowTicker();
+      loadTotalTradeReal();
     }, SMDT_REFRESH_MS);
 
     return () => {
@@ -198,6 +234,21 @@ function App() {
         setActivePage={setActivePage}
         cashFlowTickerData={cashFlowTickerData}
         cashFlowTickerError={cashFlowTickerError}
+      />
+    );
+  }
+
+  if (activePage === "top-strong-stocks") {
+    return (
+      <TopStrongStocksPage
+        activePage={activePage}
+        setActivePage={setActivePage}
+        smdtBranchData={smdtBranchData}
+        smdtTickerData={smdtTickerData}
+        cashFlowBranchData={cashFlowBranchData}
+        cashFlowTickerData={cashFlowTickerData}
+        totalTradeRealData={totalTradeRealData}
+        totalTradeRealError={totalTradeRealError}
       />
     );
   }

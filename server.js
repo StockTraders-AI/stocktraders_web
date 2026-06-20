@@ -6,10 +6,13 @@ import axios from "axios";
 import dotenv from "dotenv";
 import fs from "fs";
 import path from "path";
+import { execFile } from "child_process";
+import { promisify } from "util";
 
 dotenv.config();
 
 const app = express();
+const execFileAsync = promisify(execFile);
 
 app.disable("x-powered-by");
 app.use(
@@ -28,6 +31,17 @@ const CACHE_FILE = path.resolve("cache/smdt-branch.json");
 const TICKER_CACHE_FILE = path.resolve("cache/smdt-ticker.json");
 const CASH_FLOW_BRANCH_CACHE_FILE = path.resolve("cache/cash-flow-branch.json");
 const CASH_FLOW_TICKER_CACHE_FILE = path.resolve("cache/cash-flow-ticker.json");
+const TOTAL_TRADE_REAL_CACHE_FILE = path.resolve("cache/total-trade-real.json");
+const STOCK_TOTALS_DB_CANDIDATES = [
+  process.env.STOCK_TOTALS_DB_PATH,
+  "stock_totals.db",
+  "../re-api/stock_totals.db",
+  "../re-api/re-api/stock_totals.db",
+  "../../re-api/stock_totals.db",
+  "../../re-api/re-api/stock_totals.db",
+  "/root/re-api/stock_totals.db",
+  "/root/re-api/re-api/stock_totals.db",
+].filter(Boolean);
 const SMDT_CACHE_MS = 3 * 60 * 1000;
 
 let smdtBranchCache = null;
@@ -38,6 +52,8 @@ let cashFlowBranchCache = null;
 let cashFlowBranchCacheTime = 0;
 let cashFlowTickerCache = null;
 let cashFlowTickerCacheTime = 0;
+let totalTradeRealCache = null;
+let totalTradeRealCacheTime = 0;
 
 try {
   if (fs.existsSync(CACHE_FILE)) {
@@ -93,6 +109,21 @@ try {
   }
 } catch (error) {
   console.error("Load Cash Flow Ticker cache error:", error.message);
+}
+
+try {
+  if (fs.existsSync(TOTAL_TRADE_REAL_CACHE_FILE)) {
+    const cache = JSON.parse(
+      fs.readFileSync(TOTAL_TRADE_REAL_CACHE_FILE, "utf8")
+    );
+
+    totalTradeRealCache = cache.data;
+    totalTradeRealCacheTime = new Date(cache.updatedAt).getTime();
+
+    console.log("Loaded Total Trade Real cache:", cache.updatedAt);
+  }
+} catch (error) {
+  console.error("Load Total Trade Real cache error:", error.message);
 }
 
 
@@ -166,6 +197,142 @@ function buildIndexUrl(symbol, tradingDate) {
     "&ascending=false" +
     "&resollution=1"
   );
+}
+
+function getStockTotalsDbPath() {
+  const foundPath = STOCK_TOTALS_DB_CANDIDATES.map((candidate) =>
+    path.resolve(candidate)
+  ).find((candidate) => fs.existsSync(candidate));
+
+  return foundPath || path.resolve(STOCK_TOTALS_DB_CANDIDATES[0]);
+}
+
+function getPythonCommands() {
+  const commands = [];
+
+  if (process.env.PYTHON_BIN) {
+    commands.push({
+      command: process.env.PYTHON_BIN,
+      argsPrefix: [],
+    });
+  }
+
+  commands.push(
+    {
+      command: "python3",
+      argsPrefix: [],
+    },
+    {
+      command: "python",
+      argsPrefix: [],
+    },
+    {
+      command: "py",
+      argsPrefix: ["-3"],
+    }
+  );
+
+  [
+    "C:\\Users\\gmt\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+    "C:\\Users\\gmt\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+  ].forEach((command) => {
+    if (fs.existsSync(command)) {
+      commands.push({
+        command,
+        argsPrefix: [],
+      });
+    }
+  });
+
+  return commands;
+}
+
+async function readHistoricalPrices(tickers, date) {
+  if (!tickers.length) return [];
+
+  const dbPath = getStockTotalsDbPath();
+
+  const script = `
+import json
+import sqlite3
+import sys
+
+db_path = sys.argv[1]
+date_filter = sys.argv[2]
+tickers = json.loads(sys.argv[3])
+
+con = sqlite3.connect(db_path)
+con.row_factory = sqlite3.Row
+cur = con.cursor()
+rows = []
+
+for ticker in tickers:
+    if date_filter:
+        row = cur.execute(
+            """
+            SELECT ticker, date, open, high, low, close, vol
+            FROM stock_totals
+            WHERE ticker = ? AND date <= ?
+            ORDER BY date DESC
+            LIMIT 1
+            """,
+            (ticker, date_filter),
+        ).fetchone()
+    else:
+        row = cur.execute(
+            """
+            SELECT ticker, date, open, high, low, close, vol
+            FROM stock_totals
+            WHERE ticker = ?
+            ORDER BY date DESC
+            LIMIT 1
+            """,
+            (ticker,),
+        ).fetchone()
+
+    if row:
+        rows.append(dict(row))
+
+print(json.dumps(rows, ensure_ascii=False))
+`;
+
+  let stdout = "";
+  const errors = [];
+
+  for (const pythonCommand of getPythonCommands()) {
+    try {
+      const result = await execFileAsync(
+        pythonCommand.command,
+        [
+          ...pythonCommand.argsPrefix,
+          "-c",
+          script,
+          dbPath,
+          date || "",
+          JSON.stringify(tickers),
+        ],
+        {
+          maxBuffer: 1024 * 1024 * 16,
+          timeout: 30000,
+        }
+      );
+
+      stdout = result.stdout;
+      break;
+    } catch (error) {
+      errors.push(
+        `${pythonCommand.command} ${pythonCommand.argsPrefix.join(" ")}: ${
+          error.stderr || error.message
+        }`
+      );
+    }
+  }
+
+  if (!stdout) {
+    throw new Error(`Cannot run Python sqlite reader. ${errors.join(" | ")}`);
+  }
+
+  return JSON.parse(stdout || "[]");
 }
 
 async function requestIndexRows(symbol, token, tradingDate) {
@@ -595,6 +762,125 @@ app.post("/api/cash-flow-ticker", async (req, res) => {
       status: "error",
       message: "Cannot load Cash Flow Ticker data",
       detail: error.response?.data || error.message,
+    });
+  }
+});
+
+app.post("/api/total-trade-real", async (req, res) => {
+  const now = Date.now();
+
+  try {
+    if (totalTradeRealCache) {
+      const age = now - totalTradeRealCacheTime;
+
+      if (age < SMDT_CACHE_MS) {
+        return res.json({
+          ...totalTradeRealCache,
+          cache: true,
+          cacheAgeSeconds: Math.floor(age / 1000),
+        });
+      }
+    }
+
+    const response = await axios.post(
+      "https://stocktraders.vn/service/data/getTotalTradeReal",
+      {
+        TotalTradeRealRequest: {
+          account: "stocktraders2013",
+        },
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        timeout: 40000,
+      }
+    );
+
+    totalTradeRealCache = response.data;
+    totalTradeRealCacheTime = now;
+
+    fs.mkdirSync(path.dirname(TOTAL_TRADE_REAL_CACHE_FILE), {
+      recursive: true,
+    });
+
+    fs.writeFileSync(
+      TOTAL_TRADE_REAL_CACHE_FILE,
+      JSON.stringify(
+        {
+          updatedAt: new Date(now).toISOString(),
+          data: response.data,
+        },
+        null,
+        2
+      )
+    );
+
+    return res.json({
+      ...response.data,
+      cache: false,
+      cacheAgeSeconds: 0,
+    });
+  } catch (error) {
+    console.error(
+      "Total Trade Real API error:",
+      error.response?.data || error.message
+    );
+
+    if (totalTradeRealCache) {
+      return res.json({
+        ...totalTradeRealCache,
+        cache: true,
+        stale: true,
+      });
+    }
+
+    return res.status(500).json({
+      status: "error",
+      message: "Cannot load Total Trade Real data",
+      detail: error.response?.data || error.message,
+    });
+  }
+});
+
+app.post("/api/stock-total-history", async (req, res) => {
+  try {
+    const tickers = Array.isArray(req.body?.tickers)
+      ? req.body.tickers
+          .map((ticker) => String(ticker || "").trim().toUpperCase())
+          .filter(Boolean)
+      : [];
+    const uniqueTickers = Array.from(new Set(tickers)).slice(0, 500);
+    const date = String(req.body?.date || "").trim();
+
+    const dbPath = getStockTotalsDbPath();
+
+    if (!fs.existsSync(dbPath)) {
+      return res.status(500).json({
+        status: "error",
+        message: "stock_totals.db not found",
+        dbPath,
+        checkedPaths: STOCK_TOTALS_DB_CANDIDATES.map((candidate) =>
+          path.resolve(candidate)
+        ),
+      });
+    }
+
+    const rows = await readHistoricalPrices(uniqueTickers, date);
+
+    return res.json({
+      status: "success",
+      data: rows,
+      dbPath,
+    });
+  } catch (error) {
+    console.error("Stock totals DB error:", error.message);
+
+    return res.status(500).json({
+      status: "error",
+      message: "Cannot load historical stock prices",
+      detail: error.message,
+      dbPath: getStockTotalsDbPath(),
     });
   }
 });
