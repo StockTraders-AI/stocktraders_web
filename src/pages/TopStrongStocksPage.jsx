@@ -55,6 +55,15 @@ function formatInputDateInVietnam(date) {
   return `${values.year}-${values.month}-${values.day}`;
 }
 
+function addDays(dateString, amount) {
+  const date = new Date(dateString);
+
+  if (Number.isNaN(date.getTime())) return "";
+
+  date.setDate(date.getDate() + amount);
+
+  return formatInputDateInVietnam(date);
+}
 
 function formatPrice(value) {
   const number = Number(value);
@@ -66,7 +75,6 @@ function formatPrice(value) {
     maximumFractionDigits: number >= 1000 ? 0 : 2,
   });
 }
-
 
 function getLatestByDate(items, date, valueKey) {
   const rows = [...(items || [])]
@@ -232,6 +240,7 @@ export default function TopStrongStocksPage({
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(12);
   const [selectedDatePrices, setSelectedDatePrices] = useState([]);
+  const [previousDatePrices, setPreviousDatePrices] = useState([]);
   const [historyError, setHistoryError] = useState("");
   const effectiveDate =
     selectedDate || latestRealDate || formatInputDateInVietnam(new Date());
@@ -256,6 +265,15 @@ export default function TopStrongStocksPage({
     return map;
   }, [selectedDatePrices]);
 
+  const previousDatePriceMap = useMemo(() => {
+    const map = {};
+
+    previousDatePrices.forEach((item) => {
+      map[item.ticker] = item;
+    });
+
+    return map;
+  }, [previousDatePrices]);
 
   const smdtBranchMap = useMemo(() => {
     const map = {};
@@ -303,12 +321,20 @@ export default function TopStrongStocksPage({
         const branchKey = getBranchKeyForSmdt(branchName);
         const realPrice = realPriceMap[ticker];
         const selectedDatePrice = selectedDatePriceMap[ticker];
+        const previousDatePrice = previousDatePriceMap[ticker];
         const useRealPrice = latestRealDate && effectiveDate >= latestRealDate;
         const currentPrice = Number(
           useRealPrice
             ? realPrice?.close ?? realPrice?.price
             : selectedDatePrice?.close
         );
+        const previousClose = Number(previousDatePrice?.close);
+        const priceChangePercent =
+          Number.isFinite(currentPrice) &&
+          Number.isFinite(previousClose) &&
+          previousClose
+            ? ((currentPrice - previousClose) / previousClose) * 100
+            : null;
         const cashFlowTicker = cashFlowTickerMap[ticker];
         const cashFlowBranch =
           cashFlowBranchMap[normalizeText(branchName)] ||
@@ -327,6 +353,8 @@ export default function TopStrongStocksPage({
           branchKey,
           type: realPrice?.type || "",
           currentPrice,
+          previousClose,
+          priceChangePercent,
           smdtTicker: smdtTickerNumber,
           previousSmdtTicker: previousSmdtTickerNumber,
           smdtBranch: Number(smdtBranchMap[branchKey]),
@@ -380,6 +408,7 @@ export default function TopStrongStocksPage({
     smdtTickerData,
     threshold,
     selectedDatePriceMap,
+    previousDatePriceMap,
     latestRealDate,
   ]);
 
@@ -422,9 +451,13 @@ export default function TopStrongStocksPage({
           return json.data || [];
         };
 
-        const selectedRows = await requestHistory(effectiveDate);
+        const [selectedRows, previousRows] = await Promise.all([
+          requestHistory(effectiveDate),
+          requestHistory(addDays(effectiveDate, -1)),
+        ]);
 
         setSelectedDatePrices(selectedRows);
+        setPreviousDatePrices(previousRows);
       } catch (error) {
         if (error.name !== "AbortError") {
           setHistoryError(error.message || "Cannot load historical prices");
@@ -578,7 +611,7 @@ export default function TopStrongStocksPage({
 
                 <div className="overflow-hidden rounded-2xl border border-slate-200">
                   <div className="max-w-full overflow-x-auto">
-                    <table className="min-w-[900px] w-full border-collapse text-left">
+                    <table className="min-w-[980px] w-full border-collapse text-left">
                       <thead>
                         <tr className="bg-white">
                           {[
