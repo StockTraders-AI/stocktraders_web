@@ -272,3 +272,20 @@ body {
     width: 100%;
   }
 }
+
+.st-status-pill {
+  min-width: 96px;
+  white-space: nowrap;
+}
+
+@media (max-width: 1536px) {
+  .st-status-pill {
+    min-width: 88px;
+  }
+}
+
+@media (max-width: 1280px) {
+  .st-status-pill {
+    min-width: 82px;
+  }
+}
