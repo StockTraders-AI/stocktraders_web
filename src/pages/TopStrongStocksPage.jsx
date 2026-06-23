@@ -11,10 +11,11 @@ const FLOW_OPTIONS = [
   { value: "out", label: "Dòng tiền ra" },
 ];
 
-const THRESHOLD_OPTIONS = [
-  { value: 70, label: "SMDT ≥ 70% + tiềm năng" },
-  { value: 80, label: "SMDT ≥ 80% + tiềm năng" },
-  { value: 90, label: "SMDT ≥ 90% + tiềm năng" },
+const STATUS_OPTIONS = [
+  { value: "", label: "Tất cả trạng thái" },
+  { value: "Vừa mạnh", label: "Vừa mạnh" },
+  { value: "Duy trì", label: "Duy trì" },
+  { value: "Tiềm năng", label: "Tiềm năng" },
 ];
 
 function normalizeText(value) {
@@ -235,7 +236,7 @@ export default function TopStrongStocksPage({
   );
   const [selectedFlow, setSelectedFlow] = useState("");
   const [selectedBranch, setSelectedBranch] = useState("");
-  const [threshold, setThreshold] = useState(70);
+  const [selectedStatus, setSelectedStatus] = useState("");
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(12);
@@ -366,9 +367,7 @@ export default function TopStrongStocksPage({
       })
       .filter((item) => {
         if (!Number.isFinite(item.smdtTicker)) return false;
-        if (item.smdtTicker < Number(threshold) && !item.isPotential) {
-          return false;
-        }
+        if (selectedStatus && getStockStatus(item).label !== selectedStatus) return false;
         if (selectedBranch && item.branchName !== selectedBranch) return false;
         if (selectedFlow === "in" && !isMoneyIn(item.cashFlowTicker)) {
           return false;
@@ -406,7 +405,7 @@ export default function TopStrongStocksPage({
     selectedFlow,
     smdtBranchMap,
     smdtTickerData,
-    threshold,
+    selectedStatus,
     selectedDatePriceMap,
     previousDatePriceMap,
     latestRealDate,
@@ -575,14 +574,14 @@ export default function TopStrongStocksPage({
                   </select>
 
                   <select
-                    value={threshold}
+                    value={selectedStatus}
                     onChange={(e) => {
-                      setThreshold(Number(e.target.value));
+                      setSelectedStatus(e.target.value);
                       resetPage();
                     }}
                     className="h-11 rounded-2xl border border-slate-200 bg-white px-4 st-toolbar-select text-slate-900 outline-none max-[1536px]:h-9 max-[1536px]:rounded-xl"
                   >
-                    {THRESHOLD_OPTIONS.map((option) => (
+                    {STATUS_OPTIONS.map((option) => (
                       <option key={option.value} value={option.value}>
                         {option.label}
                       </option>

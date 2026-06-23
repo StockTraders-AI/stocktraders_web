@@ -5,6 +5,7 @@ import SMDTTickerPage from "./pages/SMDTTickerPage";
 import CashFlowBranchPage from "./pages/CashFlowBranchPage";
 import CashFlowTickerPage from "./pages/CashFlowTickerPage";
 import TopStrongStocksPage from "./pages/TopStrongStocksPage";
+import { isAllowedTicker } from "./data/allowedTickers";
 
 const SMDT_REFRESH_MS = 3 * 60 * 1000;
 
@@ -71,7 +72,11 @@ function App() {
         throw new Error(json.message || "Cannot load SMDT Ticker data");
       }
 
-      setSmdtTickerData(json?.SMDTTickerReply?.SMDTDatas || []);
+      setSmdtTickerData(
+        (json?.SMDTTickerReply?.SMDTDatas || []).filter((item) =>
+          isAllowedTicker(item.keyValue || item.keyName)
+        )
+      );
     } catch (error) {
       setSmdtTickerError(error.message || "Cannot load SMDT Ticker data");
     } finally {
@@ -128,9 +133,16 @@ function App() {
       }
 
       setCashFlowTickerData(
-        json?.CashFlowTickerReply?.cashFlowTickers ||
+        (
+          json?.CashFlowTickerReply?.cashFlowTickers ||
           json?.CashFlowTickerRequest?.cashFlowTickers ||
           []
+        ).map((dateGroup) => ({
+          ...dateGroup,
+          cashTickerDatas: (dateGroup.cashTickerDatas || []).filter((item) =>
+            isAllowedTicker(item.ticker)
+          ),
+        }))
       );
     } catch (error) {
       setCashFlowTickerError(
@@ -160,7 +172,9 @@ function App() {
       }
 
       setTotalTradeRealData(
-        json?.TotalTradeRealReply?.stockTotalReals || []
+        (json?.TotalTradeRealReply?.stockTotalReals || []).filter((item) =>
+          isAllowedTicker(item.ticker)
+        )
       );
     } catch (error) {
       setTotalTradeRealError(
